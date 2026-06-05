@@ -2,13 +2,13 @@
   <div class="page-container">
     <el-card class="page-card">
       <template #header>
-        <div class="header-content">
+        <div class="header-content" ref="headerRef">
           <span>收支类别</span>
           <el-button type="primary" size="small" @click="handleAdd">新增类别</el-button>
         </div>
       </template>
       
-      <div class="search-bar">
+      <div class="search-bar" ref="searchBarRef">
         <el-input
           v-model="searchKeyword"
           placeholder="按类别名称搜索"
@@ -97,7 +97,7 @@
       />
     </el-card>
 
-    <el-dialog title="确认删除" :visible.sync="deleteDialogVisible" width="300px">
+    <el-dialog title="确认删除" v-model="deleteDialogVisible" width="300px">
       <p>确定要删除收支类别「{{ deleteItem?.name }}」吗？</p>
       <template #footer>
         <el-button @click="deleteDialogVisible = false">取消</el-button>
@@ -105,15 +105,21 @@
       </template>
     </el-dialog>
   </div>
+
+  <ReviewPanel />
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { mockCategories } from '@/data/mockData'
 import { Search } from '@element-plus/icons-vue'
+import ReviewPanel from '@/components/ReviewPanel.vue'
+import { useReviewStore } from '@/stores/reviewStore'
 
 const router = useRouter()
+const reviewStore = useReviewStore()
+
 const categories = ref([...mockCategories])
 const searchKeyword = ref('')
 const typeFilter = ref(-1)
@@ -122,6 +128,9 @@ const currentPage = ref(1)
 const pageSize = ref(10)
 const deleteDialogVisible = ref(false)
 const deleteItem = ref<typeof mockCategories[0] | null>(null)
+
+const headerRef = ref<HTMLElement | null>(null)
+const searchBarRef = ref<HTMLElement | null>(null)
 
 const filteredCategories = computed(() => {
   let result = categories.value
@@ -192,6 +201,53 @@ const toggleStatus = (row: typeof mockCategories[0]) => {
     categories.value[index].status = categories.value[index].status === 1 ? 0 : 1
   }
 }
+
+function updateReviewableElements() {
+  nextTick(() => {
+    if (reviewStore.isReviewMode && headerRef.value) {
+      headerRef.value.style.outline = '2px dashed #1890ff'
+      headerRef.value.style.outlineOffset = '2px'
+      headerRef.value.style.cursor = 'pointer'
+      headerRef.value.addEventListener('click', handleHeaderClick)
+    } else if (headerRef.value) {
+      headerRef.value.style.outline = ''
+      headerRef.value.style.outlineOffset = ''
+      headerRef.value.style.cursor = ''
+      headerRef.value.removeEventListener('click', handleHeaderClick)
+    }
+    
+    if (reviewStore.isReviewMode && searchBarRef.value) {
+      searchBarRef.value.style.outline = '2px dashed #1890ff'
+      searchBarRef.value.style.outlineOffset = '2px'
+      searchBarRef.value.style.cursor = 'pointer'
+      searchBarRef.value.addEventListener('click', handleSearchBarClick)
+    } else if (searchBarRef.value) {
+      searchBarRef.value.style.outline = ''
+      searchBarRef.value.style.outlineOffset = ''
+      searchBarRef.value.style.cursor = ''
+      searchBarRef.value.removeEventListener('click', handleSearchBarClick)
+    }
+  })
+}
+
+function handleHeaderClick(e: MouseEvent) {
+  e.stopPropagation()
+  reviewStore.setActiveElement('.header-content')
+}
+
+function handleSearchBarClick(e: MouseEvent) {
+  e.stopPropagation()
+  reviewStore.setActiveElement('.search-bar')
+}
+
+watch(() => reviewStore.isReviewMode, () => {
+  updateReviewableElements()
+})
+
+onMounted(() => {
+  reviewStore.loadFromLocalStorage()
+  updateReviewableElements()
+})
 </script>
 
 <style scoped>

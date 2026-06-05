@@ -4,6 +4,17 @@
       <h2 class="page-title">{{ pageTitle }}</h2>
     </div>
     <div class="header-right">
+      <ReviewModeToggle />
+      <el-button
+        v-if="isReviewMode"
+        size="small"
+        :type="isSidebarOpen ? 'primary' : 'default'"
+        @click="toggleSidebar"
+        class="sidebar-toggle-btn"
+      >
+        <EditPen class="icon" />
+        {{ isSidebarOpen ? '关闭批注' : '批注面板' }}
+      </el-button>
       <el-dropdown>
         <span class="user-info">
           <span>{{ user?.name }}</span>
@@ -21,15 +32,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAppStore } from '@/stores/appStore'
+import { useReviewStore } from '@/stores/reviewStore'
+import { EditPen } from '@element-plus/icons-vue'
+import ReviewModeToggle from '@/components/ReviewModeToggle.vue'
 
 const router = useRouter()
 const route = useRoute()
 const store = useAppStore()
+const reviewStore = useReviewStore()
 
 const user = computed(() => store.user)
+const isReviewMode = computed(() => reviewStore.isReviewMode)
+const isSidebarOpen = computed(() => reviewStore.isSidebarOpen)
+
+function toggleSidebar() {
+  reviewStore.toggleSidebar()
+}
 
 const pageTitleMap: Record<string, string> = {
   '/dashboard': '首页仪表盘',
@@ -79,11 +100,28 @@ const handleLogout = () => {
   margin: 0;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .user-info {
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
   color: #374151;
+}
+
+.sidebar-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidebar-toggle-btn .icon {
+  width: 14px;
+  height: 14px;
 }
 </style>
