@@ -262,7 +262,7 @@ const newLogicCommentPriority = ref<'high' | 'medium' | 'low'>('medium')
 
 watch(() => reviewStore.activeElement, (selector) => {
   if (selector) {
-    isSidebarOpen.value = true
+    reviewStore.setSidebarOpen(true)
     activeTab.value = 'element'
     showAddDialog.value = true
     newCommentElementLabel.value = ''
