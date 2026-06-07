@@ -1,5 +1,7 @@
 # PRD Web - Vue 3 Accounting System
 
+A Vue 3 based accounting and financial management system.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
