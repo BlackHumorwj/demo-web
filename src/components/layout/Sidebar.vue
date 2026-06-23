@@ -56,7 +56,13 @@ const menuGroups = [
       { path: '/settings/departments', title: '部门管理' },
       { path: '/settings/roles', title: '角色管理' },
       { path: '/settings/currencies', title: '币种管理' },
-      { path: '/settings/logs', title: '业务日志' }
+      { path: '/settings/ledger', title: '账本管理' },
+      { path: '/settings/warehouse', title: '仓库管理' },
+      { path: '/settings/product', title: '产品管理' },
+      { path: '/settings/unit', title: '产品单位' },
+      { path: '/settings/logs', title: '业务日志' },
+      { path: '/settings/audit', title: '审核管理' },
+      { path: '/settings/seal', title: '封账管理' }
     ]
   },
   {
@@ -64,20 +70,37 @@ const menuGroups = [
     items: [
       { path: '/business/income', title: '收入管理' },
       { path: '/business/expense', title: '费用支出' },
+      { path: '/business/amortization', title: '待摊费用' },
+      { path: '/business/receipt', title: '收款管理' },
+      { path: '/business/payment', title: '付款管理' },
       { path: '/business/bonus', title: '分红管理' },
-      { path: '/business/share-change', title: '股权变更' }
+      { path: '/business/share-change', title: '股权变更' },
+      { path: '/attachment', title: '附件管理' }
     ]
   },
   {
     title: '库存',
     items: [
-      { path: '/purchase/in', title: '采购入库' }
+      { path: '/purchase/in', title: '采购入库' },
+      { path: '/inventory/sales-out', title: '销售出库' },
+      { path: '/inventory/purchase-return', title: '采购退货' },
+      { path: '/inventory/sales-return', title: '销售退货' },
+      { path: '/inventory/list', title: '库存流水' },
+      { path: '/inventory/balance', title: '库存余额查询' },
+      { path: '/inventory/cost-adjust', title: '库存成本调整' },
+      { path: '/inventory/assemble', title: '产品组装/拆分' },
+      { path: '/inventory/stocktake', title: '库存盘点' },
+      { path: '/inventory/pnl', title: '盘盈/盘亏' }
     ]
   },
   {
     title: '财务',
     items: [
+      { path: '/finance/voucher', title: '凭证管理' },
       { path: '/finance/receivable', title: '往来款管理' },
+      { path: '/finance/report', title: '经营报告' },
+      { path: '/finance/receipt-record', title: '收款记录' },
+      { path: '/finance/transfer-off-record', title: '转账核销' },
       { path: '/borrowLend', title: '借入借出' },
       { path: '/advance', title: '预收预付' }
     ]

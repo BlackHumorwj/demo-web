@@ -1,0 +1,218 @@
+<template>
+  <div class="page-container">
+    <el-card class="page-card">
+      <template #header>
+        <div class="header-content">
+          <span>新增付款</span>
+          <el-button size="small" @click="handleBack">返回</el-button>
+        </div>
+      </template>
+
+      <el-form :model="form" :rules="rules" ref="formRef" label-width="120px" class="form-container">
+        <el-form-item label="业务日期" prop="bizDate">
+          <el-date-picker
+            v-model="form.bizDate"
+            type="date"
+            placeholder="请选择日期"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+            style="width: 400px"
+          />
+        </el-form-item>
+        <el-form-item label="付款账户" prop="paymentAccountId">
+          <el-select v-model="form.paymentAccountId" placeholder="请选择付款账户" style="width: 400px">
+            <el-option v-for="item in accountList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="挂账账户">
+          <el-select v-model="form.accountId" placeholder="请选择挂账账户（可选）" style="width: 400px" clearable>
+            <el-option v-for="item in accountList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="往来单位">
+          <el-select v-model="form.contactId" placeholder="请选择往来单位（可选）" style="width: 400px" clearable>
+            <el-option v-for="item in contactList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="付款金额" prop="paymentAmount">
+          <el-input v-model.number="form.paymentAmount" type="number" placeholder="请输入付款金额" style="width: 400px" />
+        </el-form-item>
+        <el-form-item label="币种" prop="currencyId">
+          <el-select v-model="form.currencyId" placeholder="请选择币种" style="width: 400px">
+            <el-option v-for="item in currencyList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="汇率" prop="exchangeRate">
+          <el-input v-model.number="form.exchangeRate" type="number" placeholder="请输入汇率" style="width: 400px" />
+        </el-form-item>
+        <el-form-item label="业务员" prop="bizStaffId">
+          <el-select v-model="form.bizStaffId" placeholder="请选择业务员" style="width: 400px">
+            <el-option v-for="item in staffList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="部门">
+          <el-select v-model="form.bizDeptId" placeholder="请选择部门（可选）" style="width: 400px" clearable>
+            <el-option v-for="item in deptList" :key="item.id" :label="item.name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="项目">
+          <el-select v-model="form.bizProjectId" placeholder="请选择项目（可选）" style="width: 400px" clearable>
+            <el-option v-for="item in projectList" :key="item.id" :label="item.projectName" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            placeholder="请输入备注信息（可选）"
+            style="width: 400px"
+            :rows="3"
+            maxlength="256"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleSubmit">保存</el-button>
+          <el-button @click="handleBack">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, reactive, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import type { FormInstance, FormRules } from 'element-plus'
+import { mockPaymentDocs, mockAccounts, mockStaff, mockDepartments, mockProjects, mockContacts, mockCurrencies } from '@/data/mockData'
+import type { PaymentDoc } from '@/types/business'
+
+const router = useRouter()
+
+const formRef = ref<FormInstance>()
+
+const form = reactive({
+  bizDate: '',
+  paymentAccountId: '',
+  accountId: null as string | null,
+  contactId: null as string | null,
+  paymentAmount: 0,
+  currencyId: '1',
+  exchangeRate: 1.0,
+  bizStaffId: '',
+  bizDeptId: null as string | null,
+  bizProjectId: null as string | null,
+  remark: ''
+})
+
+const rules: FormRules = {
+  bizDate: [{ required: true, message: '请选择业务日期', trigger: 'change' }],
+  paymentAccountId: [{ required: true, message: '请选择付款账户', trigger: 'change' }],
+  paymentAmount: [
+    { required: true, message: '请输入付款金额', trigger: 'blur' },
+    {
+      validator: (_rule: any, value: number, callback: any) => {
+        if (value <= 0) {
+          callback(new Error('付款金额必须大于0'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'blur'
+    }
+  ],
+  currencyId: [{ required: true, message: '请选择币种', trigger: 'change' }],
+  bizStaffId: [{ required: true, message: '请选择业务员', trigger: 'change' }]
+}
+
+const accountList = computed(() => mockAccounts.filter(a => a.status === 1))
+const staffList = computed(() => mockStaff.filter(s => s.status === 1))
+const deptList = computed(() => mockDepartments.filter(d => d.status === 1))
+const projectList = computed(() => mockProjects.filter(p => p.status === 1))
+const contactList = computed(() => mockContacts.filter(c => c.status === 1))
+const currencyList = computed(() => mockCurrencies)
+
+const handleBack = () => {
+  router.push('/business/payment')
+}
+
+const handleSubmit = async () => {
+  if (!formRef.value) return
+  try {
+    await formRef.value.validate()
+  } catch (_e) {
+    return
+  }
+
+  const paymentAccount = mockAccounts.find(a => a.id === form.paymentAccountId)
+  const account = form.accountId ? mockAccounts.find(a => a.id === form.accountId) : null
+  const contact = form.contactId ? mockContacts.find(c => c.id === form.contactId) : null
+  const staff = mockStaff.find(s => s.id === form.bizStaffId)
+  const dept = form.bizDeptId ? mockDepartments.find(d => d.id === form.bizDeptId) : null
+  const project = form.bizProjectId ? mockProjects.find(p => p.id === form.bizProjectId) : null
+  const currency = mockCurrencies.find(c => c.id === form.currencyId)
+
+  const now = new Date()
+  const newId = 'P' + String(Date.now())
+  const docNo = `PY${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(mockPaymentDocs.length + 1).padStart(4, '0')}`
+
+  const newDoc: PaymentDoc = {
+    bizDocId: newId,
+    bizDocNo: docNo,
+    bizType: '付款',
+    bizDate: form.bizDate,
+    status: 0,
+    paymentAccountId: form.paymentAccountId,
+    paymentAccountName: paymentAccount?.name || '',
+    accountId: form.accountId,
+    accountName: account?.name || '',
+    contactId: form.contactId,
+    contactName: contact?.name || '',
+    paymentAmount: form.paymentAmount,
+    currencyId: form.currencyId,
+    currencyName: currency?.name || '',
+    exchangeRate: form.exchangeRate,
+    bizStaffId: form.bizStaffId,
+    bizStaffName: staff?.name || '',
+    bizDeptId: form.bizDeptId,
+    bizDeptName: dept?.name || '',
+    bizProjectId: form.bizProjectId,
+    bizProjectName: project?.projectName || '',
+    remark: form.remark,
+    createId: staff?.id || '',
+    createName: staff?.name || '',
+    createTime: now.toLocaleString('zh-CN'),
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: null,
+    auditName: '',
+    auditTime: null
+  }
+
+  mockPaymentDocs.push(newDoc)
+  router.push('/business/payment')
+}
+</script>
+
+<style scoped>
+.page-container {
+  padding: 24px;
+}
+
+.page-card {
+  min-height: 400px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+</style>

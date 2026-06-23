@@ -34,18 +34,51 @@ import SettingsCurrencies from '@/pages/settings/Currencies.vue'
 import SettingsCurrenciesAdd from '@/pages/settings/CurrenciesAdd.vue'
 import SettingsCurrenciesEdit from '@/pages/settings/CurrenciesEdit.vue'
 import SettingsLogs from '@/pages/settings/Logs.vue'
+import SettingsLedger from '@/pages/settings/Ledger.vue'
+import SettingsLedgerAdd from '@/pages/settings/LedgerAdd.vue'
+import SettingsLedgerEdit from '@/pages/settings/LedgerEdit.vue'
+import SettingsLedgerView from '@/pages/settings/LedgerView.vue'
+import SettingsWarehouse from '@/pages/settings/Warehouse.vue'
+import SettingsProduct from '@/pages/settings/Product.vue'
+import SettingsAudit from '@/pages/settings/Audit.vue'
+import SettingsAuditView from '@/pages/settings/AuditView.vue'
+import SettingsSeal from '@/pages/settings/Seal.vue'
+import SettingsSealAdd from '@/pages/settings/SealAdd.vue'
+import SettingsSealView from '@/pages/settings/SealView.vue'
+import SettingsProductAdd from '@/pages/settings/ProductAdd.vue'
+import SettingsProductEdit from '@/pages/settings/ProductEdit.vue'
+import SettingsProductView from '@/pages/settings/ProductView.vue'
+import SettingsUnit from '@/pages/settings/Unit.vue'
+import SettingsUnitAdd from '@/pages/settings/UnitAdd.vue'
+import SettingsUnitEdit from '@/pages/settings/UnitEdit.vue'
+import SettingsUnitView from '@/pages/settings/UnitView.vue'
+import SettingsUnitGroup from '@/pages/settings/UnitGroup.vue'
+import SettingsUnitConversion from '@/pages/settings/UnitConversion.vue'
 
 import BusinessIncome from '@/pages/business/Income.vue'
 import BusinessIncomeAdd from '@/pages/business/IncomeAdd.vue'
 import BusinessIncomeEdit from '@/pages/business/IncomeEdit.vue'
 import BusinessIncomeView from '@/pages/business/IncomeView.vue'
 import BusinessExpense from '@/pages/business/Expense.vue'
+import BusinessExpenseAdd from '@/pages/business/ExpenseAdd.vue'
+import BusinessExpenseEdit from '@/pages/business/ExpenseEdit.vue'
+import BusinessExpenseView from '@/pages/business/ExpenseView.vue'
+import BusinessAmortization from '@/pages/business/Amortization.vue'
+import BusinessAmortizationAdd from '@/pages/business/AmortizationAdd.vue'
+import BusinessAmortizationEdit from '@/pages/business/AmortizationEdit.vue'
+import BusinessAmortizationView from '@/pages/business/AmortizationView.vue'
 import BusinessBonus from '@/pages/business/Bonus.vue'
 import BusinessBonusAdd from '@/pages/business/BonusAdd.vue'
 import BusinessBonusEdit from '@/pages/business/BonusEdit.vue'
 import BusinessBonusView from '@/pages/business/BonusView.vue'
 import BusinessReceipt from '@/pages/business/Receipt.vue'
+import BusinessReceiptAdd from '@/pages/business/ReceiptAdd.vue'
+import BusinessReceiptEdit from '@/pages/business/ReceiptEdit.vue'
+import BusinessReceiptView from '@/pages/business/ReceiptView.vue'
 import BusinessPayment from '@/pages/business/Payment.vue'
+import BusinessPaymentAdd from '@/pages/business/PaymentAdd.vue'
+import BusinessPaymentEdit from '@/pages/business/PaymentEdit.vue'
+import BusinessPaymentView from '@/pages/business/PaymentView.vue'
 import BusinessNotes from '@/pages/business/Notes.vue'
 import BusinessShareChange from '@/pages/business/ShareChange.vue'
 import BusinessShareChangeAdd from '@/pages/business/ShareChangeAdd.vue'
@@ -55,6 +88,32 @@ import BusinessShareChangeView from '@/pages/business/ShareChangeView.vue'
 import InventoryList from '@/pages/inventory/List.vue'
 import InventoryIn from '@/pages/inventory/In.vue'
 import InventoryOut from '@/pages/inventory/Out.vue'
+import SalesOut from '@/pages/inventory/SalesOut.vue'
+import SalesOutAdd from '@/pages/inventory/SalesOutAdd.vue'
+import SalesOutEdit from '@/pages/inventory/SalesOutEdit.vue'
+import SalesOutView from '@/pages/inventory/SalesOutView.vue'
+import PurchaseReturn from '@/pages/inventory/PurchaseReturn.vue'
+import PurchaseReturnAdd from '@/pages/inventory/PurchaseReturnAdd.vue'
+import PurchaseReturnEdit from '@/pages/inventory/PurchaseReturnEdit.vue'
+import PurchaseReturnView from '@/pages/inventory/PurchaseReturnView.vue'
+import SalesReturn from '@/pages/inventory/SalesReturn.vue'
+import SalesReturnAdd from '@/pages/inventory/SalesReturnAdd.vue'
+import SalesReturnEdit from '@/pages/inventory/SalesReturnEdit.vue'
+import SalesReturnView from '@/pages/inventory/SalesReturnView.vue'
+import Stocktake from '@/pages/inventory/Stocktake.vue'
+import StocktakeAdd from '@/pages/inventory/StocktakeAdd.vue'
+import StocktakeEdit from '@/pages/inventory/StocktakeEdit.vue'
+import StocktakeView from '@/pages/inventory/StocktakeView.vue'
+import InventoryBalance from '@/pages/inventory/InventoryBalance.vue'
+import CostAdjust from '@/pages/inventory/CostAdjust.vue'
+import CostAdjustAdd from '@/pages/inventory/CostAdjustAdd.vue'
+import CostAdjustEdit from '@/pages/inventory/CostAdjustEdit.vue'
+import Assemble from '@/pages/inventory/Assemble.vue'
+import AssembleAdd from '@/pages/inventory/AssembleAdd.vue'
+import AssembleEdit from '@/pages/inventory/AssembleEdit.vue'
+import ProfitLoss from '@/pages/inventory/ProfitLoss.vue'
+import ProfitLossAdd from '@/pages/inventory/ProfitLossAdd.vue'
+import ProfitLossEdit from '@/pages/inventory/ProfitLossEdit.vue'
 
 import PurchaseIn from '@/pages/purchase/In.vue'
 import PurchaseInAdd from '@/pages/purchase/InAdd.vue'
@@ -62,6 +121,8 @@ import PurchaseInEdit from '@/pages/purchase/InEdit.vue'
 import PurchaseInView from '@/pages/purchase/InView.vue'
 
 import FinanceVoucher from '@/pages/finance/Voucher.vue'
+import FinanceVoucherAdd from '@/pages/finance/VoucherAdd.vue'
+import FinanceVoucherEdit from '@/pages/finance/VoucherEdit.vue'
 import FinanceVoucherView from '@/pages/finance/VoucherView.vue'
 import FinanceReport from '@/pages/finance/Report.vue'
 import FinanceReceivable from '@/pages/finance/Receivable.vue'
@@ -113,6 +174,11 @@ import SalaryIssueAdd from '@/pages/salary/issue/IssueAdd.vue'
 import SalaryIssueEdit from '@/pages/salary/issue/IssueEdit.vue'
 import SalaryIssueView from '@/pages/salary/issue/IssueView.vue'
 
+import Attachment from '@/pages/attachment/Attachment.vue'
+import AttachmentAdd from '@/pages/attachment/AttachmentAdd.vue'
+import AttachmentEdit from '@/pages/attachment/AttachmentEdit.vue'
+import AttachmentView from '@/pages/attachment/AttachmentView.vue'
+
 import { useAppStore } from '@/stores/appStore'
 
 const routes: RouteRecordRaw[] = [
@@ -155,18 +221,51 @@ const routes: RouteRecordRaw[] = [
       { path: '/settings/currencies/add', component: SettingsCurrenciesAdd },
       { path: '/settings/currencies/edit/:id', component: SettingsCurrenciesEdit },
       { path: '/settings/logs', component: SettingsLogs },
+      { path: '/settings/ledger', component: SettingsLedger },
+      { path: '/settings/ledger/add', component: SettingsLedgerAdd },
+      { path: '/settings/ledger/edit/:id', component: SettingsLedgerEdit },
+      { path: '/settings/ledger/view/:id', component: SettingsLedgerView },
+      { path: '/settings/warehouse', component: SettingsWarehouse },
+      { path: '/settings/product', component: SettingsProduct },
+      { path: '/settings/product/add', component: SettingsProductAdd },
+      { path: '/settings/product/edit/:id', component: SettingsProductEdit },
+      { path: '/settings/product/view/:id', component: SettingsProductView },
+      { path: '/settings/unit', component: SettingsUnit },
+      { path: '/settings/unit/add', component: SettingsUnitAdd },
+      { path: '/settings/unit/edit/:id', component: SettingsUnitEdit },
+      { path: '/settings/unit/view/:id', component: SettingsUnitView },
+      { path: '/settings/unit-group', component: SettingsUnitGroup },
+      { path: '/settings/unit-conversion', component: SettingsUnitConversion },
+      { path: '/settings/audit', component: SettingsAudit },
+      { path: '/settings/audit/view/:id', component: SettingsAuditView },
+      { path: '/settings/seal', component: SettingsSeal },
+      { path: '/settings/seal/add', component: SettingsSealAdd },
+      { path: '/settings/seal/view/:id', component: SettingsSealView },
       
       { path: '/business/income', component: BusinessIncome },
       { path: '/business/income/add', component: BusinessIncomeAdd },
       { path: '/business/income/edit/:id', component: BusinessIncomeEdit },
       { path: '/business/income/view/:id', component: BusinessIncomeView },
       { path: '/business/expense', component: BusinessExpense },
+      { path: '/business/expense/add', component: BusinessExpenseAdd },
+      { path: '/business/expense/edit/:id', component: BusinessExpenseEdit },
+      { path: '/business/expense/view/:id', component: BusinessExpenseView },
+      { path: '/business/amortization', component: BusinessAmortization },
+      { path: '/business/amortization/add', component: BusinessAmortizationAdd },
+      { path: '/business/amortization/edit/:id', component: BusinessAmortizationEdit },
+      { path: '/business/amortization/view/:id', component: BusinessAmortizationView },
       { path: '/business/bonus', component: BusinessBonus },
       { path: '/business/bonus/add', component: BusinessBonusAdd },
       { path: '/business/bonus/edit/:id', component: BusinessBonusEdit },
       { path: '/business/bonus/view/:id', component: BusinessBonusView },
       { path: '/business/receipt', component: BusinessReceipt },
+      { path: '/business/receipt/add', component: BusinessReceiptAdd },
+      { path: '/business/receipt/edit/:id', component: BusinessReceiptEdit },
+      { path: '/business/receipt/view/:id', component: BusinessReceiptView },
       { path: '/business/payment', component: BusinessPayment },
+      { path: '/business/payment/add', component: BusinessPaymentAdd },
+      { path: '/business/payment/edit/:id', component: BusinessPaymentEdit },
+      { path: '/business/payment/view/:id', component: BusinessPaymentView },
       { path: '/business/notes', component: BusinessNotes },
       { path: '/business/share-change', component: BusinessShareChange },
       { path: '/business/share-change/add', component: BusinessShareChangeAdd },
@@ -176,6 +275,32 @@ const routes: RouteRecordRaw[] = [
       { path: '/inventory/list', component: InventoryList },
       { path: '/inventory/in', component: InventoryIn },
       { path: '/inventory/out', component: InventoryOut },
+      { path: '/inventory/sales-out', component: SalesOut },
+      { path: '/inventory/sales-out/add', component: SalesOutAdd },
+      { path: '/inventory/sales-out/edit/:id', component: SalesOutEdit },
+      { path: '/inventory/sales-out/view/:id', component: SalesOutView },
+      { path: '/inventory/purchase-return', component: PurchaseReturn },
+      { path: '/inventory/purchase-return/add', component: PurchaseReturnAdd },
+      { path: '/inventory/purchase-return/edit/:id', component: PurchaseReturnEdit },
+      { path: '/inventory/purchase-return/view/:id', component: PurchaseReturnView },
+      { path: '/inventory/sales-return', component: SalesReturn },
+      { path: '/inventory/sales-return/add', component: SalesReturnAdd },
+      { path: '/inventory/sales-return/edit/:id', component: SalesReturnEdit },
+      { path: '/inventory/sales-return/view/:id', component: SalesReturnView },
+      { path: '/inventory/stocktake', component: Stocktake },
+      { path: '/inventory/stocktake/add', component: StocktakeAdd },
+      { path: '/inventory/stocktake/edit/:id', component: StocktakeEdit },
+      { path: '/inventory/stocktake/view/:id', component: StocktakeView },
+      { path: '/inventory/balance', component: InventoryBalance },
+      { path: '/inventory/cost-adjust', component: CostAdjust },
+      { path: '/inventory/cost-adjust/add', component: CostAdjustAdd },
+      { path: '/inventory/cost-adjust/edit/:id', component: CostAdjustEdit },
+      { path: '/inventory/assemble', component: Assemble },
+      { path: '/inventory/assemble/add', component: AssembleAdd },
+      { path: '/inventory/assemble/edit/:id', component: AssembleEdit },
+      { path: '/inventory/pnl', component: ProfitLoss },
+      { path: '/inventory/pnl/add', component: ProfitLossAdd },
+      { path: '/inventory/pnl/edit/:id', component: ProfitLossEdit },
       
       { path: '/purchase/in', component: PurchaseIn },
       { path: '/purchase/in/add', component: PurchaseInAdd },
@@ -183,6 +308,8 @@ const routes: RouteRecordRaw[] = [
       { path: '/purchase/in/detail/:id', component: PurchaseInView },
       
       { path: '/finance/voucher', component: FinanceVoucher },
+      { path: '/finance/voucher/add', component: FinanceVoucherAdd },
+      { path: '/finance/voucher/edit/:id', component: FinanceVoucherEdit },
       { path: '/finance/voucher/view/:id', component: FinanceVoucherView },
       { path: '/finance/report', component: FinanceReport },
       { path: '/finance/receivable', component: FinanceReceivable },
@@ -232,13 +359,18 @@ const routes: RouteRecordRaw[] = [
       { path: '/salary/issue', component: SalaryIssue },
       { path: '/salary/issue/add', component: SalaryIssueAdd },
       { path: '/salary/issue/edit/:id', component: SalaryIssueEdit },
-      { path: '/salary/issue/view/:id', component: SalaryIssueView }
+      { path: '/salary/issue/view/:id', component: SalaryIssueView },
+
+      { path: '/attachment', component: Attachment },
+      { path: '/attachment/add', component: AttachmentAdd },
+      { path: '/attachment/edit/:id', component: AttachmentEdit },
+      { path: '/attachment/view/:id', component: AttachmentView }
     ]
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory((import.meta.env.BASE_URL as string) || '/'),
   routes
 })
 

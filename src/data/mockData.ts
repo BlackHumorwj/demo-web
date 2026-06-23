@@ -1,3 +1,6 @@
+import type { PaymentDoc, ReceiptDoc } from '@/types/business'
+import type { AttachmentDoc } from '@/types/attachment'
+
 export interface User {
   id: string
   username: string
@@ -15,6 +18,17 @@ export interface Company {
   status: number
   createdAt: string
   updatedAt: string
+}
+
+export interface Ledger {
+  id: string
+  ledgerName: string
+  ledgerType: string
+  currencyCode: string
+  startDate: string
+  status: number
+  createTime: string
+  updateTime: string
 }
 
 export interface Contact {
@@ -79,6 +93,9 @@ export interface BusinessDoc {
   status: number
   statusText: string
   createdAt: string
+  docNo: string
+  summary: string
+  remark: string
 }
 
 export interface IncomeDetail {
@@ -131,6 +148,7 @@ export interface ExpenseDoc {
   updateName: string
   updateTime: string | null
   status: number
+  categoryItems?: ExpenseCategoryItem[]
 }
 
 export interface InventoryItem {
@@ -216,11 +234,11 @@ export const mockAccounts: Account[] = [
 ]
 
 export const mockBusinessDocs: BusinessDoc[] = [
-  { id: '1', type: 'income', typeName: '收入', amount: 15000.00, date: '2024-06-01', contactName: '北京客户A', status: 2, statusText: '已审核', createdAt: '2024-06-01 10:30:00' },
-  { id: '2', type: 'expense', typeName: '费用支出', amount: 2500.00, date: '2024-06-02', contactName: '', status: 2, statusText: '已审核', createdAt: '2024-06-02 14:15:00' },
-  { id: '3', type: 'receipt', typeName: '收款', amount: 10000.00, date: '2024-06-03', contactName: '上海客户B', status: 1, statusText: '待审核', createdAt: '2024-06-03 09:00:00' },
-  { id: '4', type: 'income', typeName: '收入', amount: 8000.00, date: '2024-06-04', contactName: '广州客户C', status: 2, statusText: '已审核', createdAt: '2024-06-04 11:20:00' },
-  { id: '5', type: 'expense', typeName: '费用支出', amount: 1200.00, date: '2024-06-05', contactName: '', status: 1, statusText: '待审核', createdAt: '2024-06-05 16:45:00' }
+  { id: '1', type: 'income', typeName: '收入', amount: 15000.00, date: '2024-06-01', contactName: '北京客户A', status: 2, statusText: '已审核', createdAt: '2024-06-01 10:30:00', docNo: 'IN202406001', summary: '销售货款', remark: '销售货款' },
+  { id: '2', type: 'expense', typeName: '费用支出', amount: 2500.00, date: '2024-06-02', contactName: '', status: 2, statusText: '已审核', createdAt: '2024-06-02 14:15:00', docNo: 'EX202406001', summary: '办公用品采购', remark: '办公用品采购' },
+  { id: '3', type: 'receipt', typeName: '收款', amount: 10000.00, date: '2024-06-03', contactName: '上海客户B', status: 1, statusText: '待审核', createdAt: '2024-06-03 09:00:00', docNo: 'RC202406001', summary: '客户预付款', remark: '客户预付款' },
+  { id: '4', type: 'income', typeName: '收入', amount: 8000.00, date: '2024-06-04', contactName: '广州客户C', status: 2, statusText: '已审核', createdAt: '2024-06-04 11:20:00', docNo: 'IN202406002', summary: '技术服务费', remark: '技术服务费' },
+  { id: '5', type: 'expense', typeName: '费用支出', amount: 1200.00, date: '2024-06-05', contactName: '', status: 1, statusText: '待审核', createdAt: '2024-06-05 16:45:00', docNo: 'EX202406002', summary: '差旅费', remark: '差旅费' }
 ]
 
 export const mockInventoryItems: InventoryItem[] = [
@@ -322,15 +340,37 @@ export const mockIncomeDocs: IncomeDoc[] = [
   { id: '5', docNo: 'IN202406005', date: '2024-06-07', contactId: '2', contactName: '上海供应商B', accountId: '1', accountName: '工商银行', projectId: '1', projectName: '电商平台开发', remark: '项目尾款', status: 0, createdAt: '2024-06-07 09:15:00', updatedAt: '2024-06-07 09:15:00', details: [{ id: '5-1', categoryId: '1', categoryName: '销售收入', amount: 15000.00, remark: '产品交付' }, { id: '5-2', categoryId: '2', categoryName: '服务收入', amount: 5000.00, remark: '运维服务' }] }
 ]
 
+export interface ExpenseCategoryItem {
+  itemId: string
+  categoryId: string
+  categoryName: string
+  amount: number
+  remark: string
+}
+
 export const mockExpenseDocs: ExpenseDoc[] = [
-  { bizDocId: '1', bizDocNo: 'EX202406001', tradeTime: '2024-06-02', accountId: '1', accountName: '工商银行', staffId: '1', staffName: '张三', deptId: '1', deptName: '财务部', projectId: '1', projectName: '电商平台开发', bizContactId: null, bizContactName: '', amount: 2500.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '办公设备采购', writerId: '1', writerName: '张三', writerTime: '2024-06-02 14:15:00', updateId: null, updateName: '', updateTime: null, status: 0 },
-  { bizDocId: '2', bizDocNo: 'EX202406002', tradeTime: '2024-06-05', accountId: '2', accountName: '现金', staffId: '2', staffName: '李四', deptId: '2', deptName: '销售部', projectId: null, projectName: '', bizContactId: '2', bizContactName: '上海供应商B', amount: 1200.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '差旅费报销', writerId: '2', writerName: '李四', writerTime: '2024-06-05 16:45:00', updateId: '1', updateName: '张三', updateTime: '2024-06-05 17:00:00', status: 0 },
-  { bizDocId: '3', bizDocNo: 'EX202406003', tradeTime: '2024-06-08', accountId: '1', accountName: '工商银行', staffId: '1', staffName: '张三', deptId: '3', deptName: '技术部', projectId: '1', projectName: '电商平台开发', bizContactId: null, bizContactName: '', amount: 5000.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '服务器租赁费用', writerId: '1', writerName: '张三', writerTime: '2024-06-08 10:30:00', updateId: null, updateName: '', updateTime: null, status: 0 },
-  { bizDocId: '4', bizDocNo: 'EX202406004', tradeTime: '2024-06-10', accountId: '3', accountName: '建设银行', staffId: '2', staffName: '李四', deptId: '4', deptName: '市场部', projectId: '2', projectName: '市场推广活动', bizContactId: '3', bizContactName: '广州客户C', amount: 8000.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '广告投放费用', writerId: '2', writerName: '李四', writerTime: '2024-06-10 11:00:00', updateId: null, updateName: '', updateTime: null, status: 0 },
-  { bizDocId: '5', bizDocNo: 'EX202406005', tradeTime: '2024-06-12', accountId: '2', accountName: '现金', staffId: '3', staffName: '王五', deptId: '2', deptName: '销售部', projectId: null, projectName: '', bizContactId: null, bizContactName: '', amount: 350.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '办公用品采购', writerId: '3', writerName: '王五', writerTime: '2024-06-12 14:30:00', updateId: null, updateName: '', updateTime: null, status: 0 },
-  { bizDocId: '6', bizDocNo: 'EX202406006', tradeTime: '2024-06-15', accountId: '1', accountName: '工商银行', staffId: '1', staffName: '张三', deptId: '1', deptName: '财务部', projectId: null, projectName: '', bizContactId: '4', bizContactName: '深圳供应商D', amount: 15000.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '软件许可证费用', writerId: '1', writerName: '张三', writerTime: '2024-06-15 09:00:00', updateId: '2', updateName: '李四', updateTime: '2024-06-15 09:30:00', status: 0 },
-  { bizDocId: '7', bizDocNo: 'EX202406007', tradeTime: '2024-06-18', accountId: '2', accountName: '现金', staffId: '2', staffName: '李四', deptId: '3', deptName: '技术部', projectId: '1', projectName: '电商平台开发', bizContactId: null, bizContactName: '', amount: 800.00, currencyCode: 'USD', exchangeRate: 7.24500000, remark: '技术书籍采购', writerId: '2', writerName: '李四', writerTime: '2024-06-18 15:00:00', updateId: null, updateName: '', updateTime: null, status: 0 },
-  { bizDocId: '8', bizDocNo: 'EX202406008', tradeTime: '2024-06-20', accountId: '3', accountName: '建设银行', staffId: '3', staffName: '王五', deptId: '4', deptName: '市场部', projectId: '2', projectName: '市场推广活动', bizContactId: null, bizContactName: '', amount: 3000.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '活动场地租赁', writerId: '3', writerName: '王五', writerTime: '2024-06-20 10:00:00', updateId: null, updateName: '', updateTime: null, status: -1 }
+  { bizDocId: '1', bizDocNo: 'EX202406001', tradeTime: '2024-06-02', accountId: '1', accountName: '工商银行', staffId: '1', staffName: '张三', deptId: '1', deptName: '财务部', projectId: '1', projectName: '电商平台开发', bizContactId: null, bizContactName: '', amount: 2500.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '办公设备采购', writerId: '1', writerName: '张三', writerTime: '2024-06-02 14:15:00', updateId: null, updateName: '', updateTime: null, status: 0, categoryItems: [{ itemId: 'EX1-1', categoryId: '3', categoryName: '办公费用', amount: 1500.00, remark: '办公用品' }, { itemId: 'EX1-2', categoryId: '4', categoryName: '差旅费', amount: 1000.00, remark: '出差报销' }] },
+  { bizDocId: '2', bizDocNo: 'EX202406002', tradeTime: '2024-06-05', accountId: '2', accountName: '现金', staffId: '2', staffName: '李四', deptId: '2', deptName: '销售部', projectId: null, projectName: '', bizContactId: '2', bizContactName: '上海供应商B', amount: 1200.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '差旅费报销', writerId: '2', writerName: '李四', writerTime: '2024-06-05 16:45:00', updateId: '1', updateName: '张三', updateTime: '2024-06-05 17:00:00', status: 0, categoryItems: [{ itemId: 'EX2-1', categoryId: '4', categoryName: '差旅费', amount: 1200.00, remark: '出差交通住宿' }] },
+  { bizDocId: '3', bizDocNo: 'EX202406003', tradeTime: '2024-06-08', accountId: '1', accountName: '工商银行', staffId: '1', staffName: '张三', deptId: '3', deptName: '技术部', projectId: '1', projectName: '电商平台开发', bizContactId: null, bizContactName: '', amount: 5000.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '服务器租赁费用', writerId: '1', writerName: '张三', writerTime: '2024-06-08 10:30:00', updateId: null, updateName: '', updateTime: null, status: 0, categoryItems: [{ itemId: 'EX3-1', categoryId: '3', categoryName: '办公费用', amount: 5000.00, remark: '阿里云服务器租赁' }] },
+  { bizDocId: '4', bizDocNo: 'EX202406004', tradeTime: '2024-06-10', accountId: '3', accountName: '建设银行', staffId: '2', staffName: '李四', deptId: '4', deptName: '市场部', projectId: '2', projectName: '市场推广活动', bizContactId: '3', bizContactName: '广州客户C', amount: 8000.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '广告投放费用', writerId: '2', writerName: '李四', writerTime: '2024-06-10 11:00:00', updateId: null, updateName: '', updateTime: null, status: 0, categoryItems: [{ itemId: 'EX4-1', categoryId: '3', categoryName: '办公费用', amount: 5000.00, remark: '线上广告' }, { itemId: 'EX4-2', categoryId: '4', categoryName: '差旅费', amount: 3000.00, remark: '展会费用' }] },
+  { bizDocId: '5', bizDocNo: 'EX202406005', tradeTime: '2024-06-12', accountId: '2', accountName: '现金', staffId: '3', staffName: '王五', deptId: '2', deptName: '销售部', projectId: null, projectName: '', bizContactId: null, bizContactName: '', amount: 350.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '办公用品采购', writerId: '3', writerName: '王五', writerTime: '2024-06-12 14:30:00', updateId: null, updateName: '', updateTime: null, status: 0, categoryItems: [{ itemId: 'EX5-1', categoryId: '3', categoryName: '办公费用', amount: 350.00, remark: '纸张打印' }] },
+  { bizDocId: '6', bizDocNo: 'EX202406006', tradeTime: '2024-06-15', accountId: '1', accountName: '工商银行', staffId: '1', staffName: '张三', deptId: '1', deptName: '财务部', projectId: null, projectName: '', bizContactId: '4', bizContactName: '深圳供应商D', amount: 15000.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '软件许可证费用', writerId: '1', writerName: '张三', writerTime: '2024-06-15 09:00:00', updateId: '2', updateName: '李四', updateTime: '2024-06-15 09:30:00', status: 0, categoryItems: [{ itemId: 'EX6-1', categoryId: '3', categoryName: '办公费用', amount: 15000.00, remark: '企业版授权' }] },
+  { bizDocId: '7', bizDocNo: 'EX202406007', tradeTime: '2024-06-18', accountId: '2', accountName: '现金', staffId: '2', staffName: '李四', deptId: '3', deptName: '技术部', projectId: '1', projectName: '电商平台开发', bizContactId: null, bizContactName: '', amount: 800.00, currencyCode: 'USD', exchangeRate: 7.24500000, remark: '技术书籍采购', writerId: '2', writerName: '李四', writerTime: '2024-06-18 15:00:00', updateId: null, updateName: '', updateTime: null, status: 0, categoryItems: [{ itemId: 'EX7-1', categoryId: '3', categoryName: '办公费用', amount: 800.00, remark: '技术书籍' }] },
+  { bizDocId: '8', bizDocNo: 'EX202406008', tradeTime: '2024-06-20', accountId: '3', accountName: '建设银行', staffId: '3', staffName: '王五', deptId: '4', deptName: '市场部', projectId: '2', projectName: '市场推广活动', bizContactId: null, bizContactName: '', amount: 3000.00, currencyCode: 'CNY', exchangeRate: 1.00000000, remark: '活动场地租赁', writerId: '3', writerName: '王五', writerTime: '2024-06-20 10:00:00', updateId: null, updateName: '', updateTime: null, status: -1, categoryItems: [{ itemId: 'EX8-1', categoryId: '4', categoryName: '差旅费', amount: 3000.00, remark: '场地费' }] }
+]
+
+export const mockPaymentDocs: PaymentDoc[] = [
+  { bizDocId: 'P1', bizDocNo: 'PY202406001', bizType: '付款', bizDate: '2024-06-04', status: 0, paymentAccountId: '1', paymentAccountName: '工商银行', accountId: '2', accountName: '应付账款', contactId: '2', contactName: '上海供应商B', paymentAmount: 15000.00, currencyId: '1', currencyName: '人民币', exchangeRate: 1.00000000, bizStaffId: '1', bizStaffName: '张三', bizDeptId: '1', bizDeptName: '财务部', bizProjectId: '1', bizProjectName: '电商平台开发', remark: '支付货款', createId: '1', createName: '张三', createTime: '2024-06-04 10:30:00', updateId: null, updateName: '', updateTime: null, auditId: '1', auditName: '管理员', auditTime: '2024-06-04 14:00:00' },
+  { bizDocId: 'P2', bizDocNo: 'PY202406002', bizType: '付款', bizDate: '2024-06-09', status: 0, paymentAccountId: '2', paymentAccountName: '现金', accountId: null, accountName: '', contactId: '4', contactName: '深圳供应商D', paymentAmount: 3200.00, currencyId: '1', currencyName: '人民币', exchangeRate: 1.00000000, bizStaffId: '2', bizStaffName: '李四', bizDeptId: '3', bizDeptName: '技术部', bizProjectId: null, bizProjectName: '', remark: '技术服务费', createId: '2', createName: '李四', createTime: '2024-06-09 16:45:00', updateId: null, updateName: '', updateTime: null, auditId: null, auditName: '', auditTime: null },
+  { bizDocId: 'P3', bizDocNo: 'PY202406003', bizType: '付款', bizDate: '2024-06-14', status: 0, paymentAccountId: '3', paymentAccountName: '建设银行', accountId: '2', accountName: '应付账款', contactId: '2', contactName: '上海供应商B', paymentAmount: 800.00, currencyId: '2', currencyName: '美元', exchangeRate: 7.24500000, bizStaffId: '1', bizStaffName: '张三', bizDeptId: '2', bizDeptName: '销售部', bizProjectId: '2', bizProjectName: '市场推广活动', remark: '预付款支付', createId: '1', createName: '张三', createTime: '2024-06-14 11:20:00', updateId: '1', updateName: '张三', updateTime: '2024-06-14 11:50:00', auditId: '1', auditName: '管理员', auditTime: '2024-06-14 15:20:00' },
+  { bizDocId: 'P4', bizDocNo: 'PY202406004', bizType: '付款', bizDate: '2024-06-20', status: -1, paymentAccountId: '1', paymentAccountName: '工商银行', accountId: null, accountName: '', contactId: '4', contactName: '深圳供应商D', paymentAmount: 6500.00, currencyId: '1', currencyName: '人民币', exchangeRate: 1.00000000, bizStaffId: '3', bizStaffName: '王五', bizDeptId: '4', bizDeptName: '市场部', bizProjectId: '2', bizProjectName: '市场推广活动', remark: '活动费用', createId: '3', createName: '王五', createTime: '2024-06-20 09:00:00', updateId: null, updateName: '', updateTime: null, auditId: null, auditName: '', auditTime: null }
+]
+
+export const mockReceiptDocs: ReceiptDoc[] = [
+  { bizDocId: 'R1', bizDocNo: 'RC202406001', bizType: '收款', bizDate: '2024-06-03', status: 0, receiptAccountId: '1', receiptAccountName: '工商银行', accountId: '1', accountName: '应收账款', contactId: '1', contactName: '北京客户A', receiptAmount: 12000.00, currencyId: '1', currencyName: '人民币', exchangeRate: 1.00000000, bizStaffId: '1', bizStaffName: '张三', bizDeptId: '1', bizDeptName: '财务部', bizProjectId: '1', bizProjectName: '电商平台开发', remark: 'Q2回款', createId: '1', createName: '张三', createTime: '2024-06-03 10:15:00', updateId: null, updateName: '', updateTime: null, auditId: '1', auditName: '管理员', auditTime: '2024-06-03 14:00:00' },
+  { bizDocId: 'R2', bizDocNo: 'RC202406002', bizType: '收款', bizDate: '2024-06-07', status: 0, receiptAccountId: '2', receiptAccountName: '现金', accountId: null, accountName: '', contactId: '3', contactName: '广州客户C', receiptAmount: 5500.00, currencyId: '1', currencyName: '人民币', exchangeRate: 1.00000000, bizStaffId: '2', bizStaffName: '李四', bizDeptId: '2', bizDeptName: '销售部', bizProjectId: null, bizProjectName: '', remark: '项目尾款', createId: '2', createName: '李四', createTime: '2024-06-07 16:45:00', updateId: null, updateName: '', updateTime: null, auditId: null, auditName: '', auditTime: null },
+  { bizDocId: 'R3', bizDocNo: 'RC202406003', bizType: '收款', bizDate: '2024-06-11', status: 0, receiptAccountId: '3', receiptAccountName: '建设银行', accountId: '1', accountName: '应收账款', contactId: '2', contactName: '上海供应商B', receiptAmount: 800.00, currencyId: '2', currencyName: '美元', exchangeRate: 7.24500000, bizStaffId: '1', bizStaffName: '张三', bizDeptId: '3', bizDeptName: '技术部', bizProjectId: '1', bizProjectName: '电商平台开发', remark: '技术服务费', createId: '1', createName: '张三', createTime: '2024-06-11 10:30:00', updateId: '1', updateName: '张三', updateTime: '2024-06-11 11:00:00', auditId: '1', auditName: '管理员', auditTime: '2024-06-11 15:20:00' },
+  { bizDocId: 'R4', bizDocNo: 'RC202406004', bizType: '收款', bizDate: '2024-06-16', status: -1, receiptAccountId: '1', receiptAccountName: '工商银行', accountId: null, accountName: '', contactId: '4', contactName: '深圳供应商D', receiptAmount: 3200.00, currencyId: '1', currencyName: '人民币', exchangeRate: 1.00000000, bizStaffId: '3', bizStaffName: '王五', bizDeptId: '4', bizDeptName: '市场部', bizProjectId: '2', bizProjectName: '市场推广活动', remark: '活动赞助', createId: '3', createName: '王五', createTime: '2024-06-16 09:00:00', updateId: null, updateName: '', updateTime: null, auditId: null, auditName: '', auditTime: null }
 ]
 
 export interface ArapRecord {
@@ -1449,6 +1489,70 @@ export const mockProducts: Product[] = [
   { id: '5', name: '配件E', spec: '型号E5', unit: '个', stock: 1000 }
 ]
 
+export interface Ledger {
+  id: string
+  ledgerName: string
+  ledgerType: string
+  currencyCode: string
+  startDate: string
+  status: number
+  createTime: string
+  updateTime: string
+  hasTransactions: boolean
+}
+
+export const mockLedgers: Ledger[] = [
+  { id: '1', ledgerName: '2024年度账套', ledgerType: '小规模纳税人', currencyCode: 'CNY', startDate: '2024-01-01', status: 0, createTime: '2024-01-01 10:00:00', updateTime: '2024-01-01 10:00:00', hasTransactions: true },
+  { id: '2', ledgerName: '2023年度账套', ledgerType: '小规模纳税人', currencyCode: 'CNY', startDate: '2023-01-01', status: 1, createTime: '2023-01-01 09:00:00', updateTime: '2023-12-31 18:00:00', hasTransactions: true },
+  { id: '3', ledgerName: '美元核算账套', ledgerType: '一般纳税人', currencyCode: 'USD', startDate: '2024-03-01', status: 0, createTime: '2024-03-01 14:00:00', updateTime: '2024-03-01 14:00:00', hasTransactions: false },
+  { id: '4', ledgerName: '测试账套', ledgerType: '小规模纳税人', currencyCode: 'CNY', startDate: '2024-06-01', status: 0, createTime: '2024-06-01 16:00:00', updateTime: '2024-06-01 16:00:00', hasTransactions: false }
+]
+
+export interface ProductDetail {
+  id: string
+  productName: string
+  specification: string
+  unit: string
+  costPrice: number
+  incomeCategoryId: string
+  incomeCategoryName: string
+  costCategoryId: string
+  costCategoryName: string
+  productGroupId: string | null
+  productGroupName: string
+  initialStock: number
+  remark: string
+  status: number
+  writerTime: string
+  inventories: { warehouseId: string; warehouseName: string; quantity: number; unitCost: number; totalCost: number }[]
+}
+
+export const mockProductsDetail: ProductDetail[] = [
+  { id: '1', productName: '产品A', specification: '型号A1标准装', unit: '件', costPrice: 50.0000, incomeCategoryId: '1', incomeCategoryName: '销售收入', costCategoryId: '3', costCategoryName: '办公费用', productGroupId: '1', productGroupName: '主要产品', initialStock: 100, remark: '核心产品', status: 0, writerTime: '2024-01-01 10:00:00', inventories: [{ warehouseId: '1', warehouseName: '主仓库', quantity: 80, unitCost: 50.00, totalCost: 4000.00 }, { warehouseId: '3', warehouseName: '成品仓库', quantity: 20, unitCost: 50.00, totalCost: 1000.00 }] },
+  { id: '2', productName: '产品B', specification: '型号B2豪华装', unit: '件', costPrice: 120.0000, incomeCategoryId: '1', incomeCategoryName: '销售收入', costCategoryId: '3', costCategoryName: '办公费用', productGroupId: '1', productGroupName: '主要产品', initialStock: 50, remark: '', status: 0, writerTime: '2024-01-01 10:30:00', inventories: [{ warehouseId: '1', warehouseName: '主仓库', quantity: 50, unitCost: 120.00, totalCost: 6000.00 }] },
+  { id: '3', productName: '产品C', specification: '型号C3经济装', unit: '箱', costPrice: 30.0000, incomeCategoryId: '1', incomeCategoryName: '销售收入', costCategoryId: '3', costCategoryName: '办公费用', productGroupId: '2', productGroupName: '辅助产品', initialStock: 200, remark: '畅销产品', status: 0, writerTime: '2024-01-15 14:00:00', inventories: [{ warehouseId: '1', warehouseName: '主仓库', quantity: 150, unitCost: 30.00, totalCost: 4500.00 }, { warehouseId: '2', warehouseName: '备用仓库', quantity: 50, unitCost: 30.00, totalCost: 1500.00 }] },
+  { id: '4', productName: '原材料D', specification: '规格D4-A', unit: '公斤', costPrice: 10.0000, incomeCategoryId: '2', incomeCategoryName: '服务收入', costCategoryId: '3', costCategoryName: '办公费用', productGroupId: '3', productGroupName: '原材料', initialStock: 500, remark: '主要原材料', status: 0, writerTime: '2024-02-01 09:00:00', inventories: [{ warehouseId: '4', warehouseName: '原材料仓库', quantity: 500, unitCost: 10.00, totalCost: 5000.00 }] },
+  { id: '5', productName: '配件E', specification: '型号E5', unit: '个', costPrice: 5.0000, incomeCategoryId: '2', incomeCategoryName: '服务收入', costCategoryId: '3', costCategoryName: '办公费用', productGroupId: '4', productGroupName: '配件', initialStock: 1000, remark: '', status: -1, writerTime: '2024-03-01 11:00:00', inventories: [] }
+]
+
+export interface WarehouseDetail {
+  id: string
+  warehouseName: string
+  isDefault: number
+  status: number
+  createTime: string
+  updateTime: string
+  inventoryCount: number
+}
+
+export const mockWarehousesDetail: WarehouseDetail[] = [
+  { id: '1', warehouseName: '主仓库', isDefault: 1, status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00', inventoryCount: 25 },
+  { id: '2', warehouseName: '备用仓库', isDefault: 0, status: 0, createTime: '2024-01-10 10:00:00', updateTime: '2024-01-10 10:00:00', inventoryCount: 8 },
+  { id: '3', warehouseName: '成品仓库', isDefault: 0, status: 0, createTime: '2024-01-15 14:00:00', updateTime: '2024-01-15 14:00:00', inventoryCount: 12 },
+  { id: '4', warehouseName: '原材料仓库', isDefault: 0, status: 0, createTime: '2024-02-01 09:30:00', updateTime: '2024-02-01 09:30:00', inventoryCount: 6 },
+  { id: '5', warehouseName: '临时仓库', isDefault: 0, status: -1, createTime: '2024-03-01 16:00:00', updateTime: '2024-04-01 10:00:00', inventoryCount: 0 }
+]
+
 export const mockPurchaseInDocs: PurchaseInDoc[] = [
   { 
     bizDocId: '1', 
@@ -1604,6 +1708,312 @@ export const mockPurchaseInDocs: PurchaseInDoc[] = [
     status: 0,
     items: [
       { itemId: '5-1', productId: '5', productName: '配件E', quantity: 800.00, price: 10.00, originalAmount: 8000.00, costAmount: 8000.00, remark: '办公耗材' }
+    ]
+  }
+]
+
+export const mockSalesOutDocs: import('@/types/inventory').SalesOutDoc[] = [
+  {
+    bizDocId: '1',
+    bizDocNo: 'SO-20240602-0001',
+    bizType: 'SALES_OUT',
+    bizDate: '2024-06-02',
+    status: 2,
+    ownerId: '1',
+    ownerType: 1,
+    ownerName: '北京客户A',
+    contactId: '1',
+    contactName: '张三',
+    accountId: '1',
+    accountName: '工商银行',
+    totalQty: 100,
+    totalAmount: 50000.00,
+    bizStaffId: '3',
+    bizStaffName: '王五',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: '1',
+    bizProjectName: '电商平台开发',
+    remark: '首批产品交付',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-02 10:00:00',
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: '1',
+    auditName: '管理员',
+    auditTime: '2024-06-02 14:30:00',
+    categoryItems: [
+      { itemId: '1-C1', categoryId: '1', categoryName: '销售收入', amount: 50000.00, remark: '产品销售' }
+    ],
+    inventoryItems: [
+      { itemId: '1-I1', prodId: '1', prodName: '产品A', prodSpec: '型号A1', unit: '件', qty: 100, price: 500.00, amount: 50000.00, warehouseId: '1', remark: '主仓库出库' }
+    ]
+  },
+  {
+    bizDocId: '2',
+    bizDocNo: 'SO-20240608-0002',
+    bizType: 'SALES_OUT',
+    bizDate: '2024-06-08',
+    status: 1,
+    ownerId: '3',
+    ownerType: 1,
+    ownerName: '广州客户C',
+    contactId: '',
+    contactName: '',
+    accountId: '2',
+    accountName: '现金',
+    totalQty: 20,
+    totalAmount: 2400.00,
+    bizStaffId: '3',
+    bizStaffName: '王五',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: null,
+    bizProjectName: '',
+    remark: '样品销售',
+    createId: '3',
+    createName: '王五',
+    createTime: '2024-06-08 11:20:00',
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '2-C1', categoryId: '1', categoryName: '销售收入', amount: 2400.00, remark: '' }
+    ],
+    inventoryItems: [
+      { itemId: '2-I1', prodId: '3', prodName: '产品C', prodSpec: '型号C3', unit: '箱', qty: 20, price: 120.00, amount: 2400.00, warehouseId: '3', remark: '成品仓库出库' }
+    ]
+  },
+  {
+    bizDocId: '3',
+    bizDocNo: 'SO-20240615-0003',
+    bizType: 'SALES_OUT',
+    bizDate: '2024-06-15',
+    status: 0,
+    ownerId: '1',
+    ownerType: 1,
+    ownerName: '北京客户A',
+    contactId: '1',
+    contactName: '张三',
+    accountId: '3',
+    accountName: '建设银行',
+    totalQty: 50,
+    totalAmount: 6000.00,
+    bizStaffId: '3',
+    bizStaffName: '王五',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: '2',
+    bizProjectName: '市场推广活动',
+    remark: '活动物资',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-15 09:00:00',
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '3-C1', categoryId: '1', categoryName: '销售收入', amount: 6000.00, remark: '' }
+    ],
+    inventoryItems: [
+      { itemId: '3-I1', prodId: '2', prodName: '产品B', prodSpec: '型号B2', unit: '件', qty: 50, price: 120.00, amount: 6000.00, warehouseId: '1', remark: '' }
+    ]
+  },
+  {
+    bizDocId: '4',
+    bizDocNo: 'SO-20240620-0004',
+    bizType: 'SALES_OUT',
+    bizDate: '2024-06-20',
+    status: 3,
+    ownerId: '3',
+    ownerType: 1,
+    ownerName: '广州客户C',
+    contactId: '',
+    contactName: '',
+    accountId: '1',
+    accountName: '工商银行',
+    totalQty: 300,
+    totalAmount: 15000.00,
+    bizStaffId: '3',
+    bizStaffName: '王五',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: null,
+    bizProjectName: '',
+    remark: '已撤销的订单',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-20 16:40:00',
+    updateId: '1',
+    updateName: '管理员',
+    updateTime: '2024-06-21 10:00:00',
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '4-C1', categoryId: '1', categoryName: '销售收入', amount: 15000.00, remark: '' }
+    ],
+    inventoryItems: [
+      { itemId: '4-I1', prodId: '1', prodName: '产品A', prodSpec: '型号A1', unit: '件', qty: 300, price: 50.00, amount: 15000.00, warehouseId: '1', remark: '' }
+    ]
+  }
+]
+
+export const mockSalesReturnDocs: import('@/types/inventory').SalesReturnDoc[] = [
+  {
+    bizDocId: '1',
+    bizDocNo: 'SR-20240605-0001',
+    bizType: 'SALES_RETURN',
+    bizDate: '2024-06-05',
+    status: 2,
+    customerId: '1',
+    customerName: '北京客户A',
+    contactId: '1',
+    contactName: '张三',
+    accountId: '1',
+    accountName: '工商银行',
+    totalQty: 10,
+    totalAmount: 5000.00,
+    bizStaffId: '3',
+    bizStaffName: '王五',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: '1',
+    bizProjectName: '电商平台开发',
+    remark: '客户退货，产品质量问题',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-05 10:30:00',
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: '1',
+    auditName: '管理员',
+    auditTime: '2024-06-05 15:00:00',
+    categoryItems: [
+      { itemId: '1-C1', categoryId: '1', categoryName: '销售收入', amount: 5000.00, remark: '销售退货冲回' }
+    ],
+    inventoryItems: [
+      { itemId: '1-I1', prodId: '1', prodName: '产品A', prodSpec: '型号A1', unit: '件', qty: 10, price: 500.00, amount: 5000.00, warehouseId: '1', remark: '退回主仓库' }
+    ]
+  },
+  {
+    bizDocId: '2',
+    bizDocNo: 'SR-20240612-0002',
+    bizType: 'SALES_RETURN',
+    bizDate: '2024-06-12',
+    status: 1,
+    customerId: '3',
+    customerName: '广州客户C',
+    contactId: '',
+    contactName: '',
+    accountId: '2',
+    accountName: '现金',
+    totalQty: 5,
+    totalAmount: 600.00,
+    bizStaffId: '3',
+    bizStaffName: '王五',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: null,
+    bizProjectName: '',
+    remark: '客户换货退回',
+    createId: '3',
+    createName: '王五',
+    createTime: '2024-06-12 11:20:00',
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '2-C1', categoryId: '1', categoryName: '销售收入', amount: 600.00, remark: '' }
+    ],
+    inventoryItems: [
+      { itemId: '2-I1', prodId: '3', prodName: '产品C', prodSpec: '型号C3', unit: '箱', qty: 5, price: 120.00, amount: 600.00, warehouseId: '3', remark: '退回成品仓库' }
+    ]
+  },
+  {
+    bizDocId: '3',
+    bizDocNo: 'SR-20240618-0003',
+    bizType: 'SALES_RETURN',
+    bizDate: '2024-06-18',
+    status: 0,
+    customerId: '1',
+    customerName: '北京客户A',
+    contactId: '1',
+    contactName: '张三',
+    accountId: '3',
+    accountName: '建设银行',
+    totalQty: 20,
+    totalAmount: 2400.00,
+    bizStaffId: '3',
+    bizStaffName: '王五',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: '2',
+    bizProjectName: '市场推广活动',
+    remark: '客户部分退货',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-18 09:00:00',
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '3-C1', categoryId: '1', categoryName: '销售收入', amount: 2400.00, remark: '' }
+    ],
+    inventoryItems: [
+      { itemId: '3-I1', prodId: '2', prodName: '产品B', prodSpec: '型号B2', unit: '件', qty: 20, price: 120.00, amount: 2400.00, warehouseId: '1', remark: '' }
+    ]
+  },
+  {
+    bizDocId: '4',
+    bizDocNo: 'SR-20240625-0004',
+    bizType: 'SALES_RETURN',
+    bizDate: '2024-06-25',
+    status: 3,
+    customerId: '3',
+    customerName: '广州客户C',
+    contactId: '',
+    contactName: '',
+    accountId: '1',
+    accountName: '工商银行',
+    totalQty: 50,
+    totalAmount: 2500.00,
+    bizStaffId: '3',
+    bizStaffName: '王五',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: null,
+    bizProjectName: '',
+    remark: '已撤销的退货申请',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-25 16:40:00',
+    updateId: '1',
+    updateName: '管理员',
+    updateTime: '2024-06-26 10:00:00',
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '4-C1', categoryId: '1', categoryName: '销售收入', amount: 2500.00, remark: '' }
+    ],
+    inventoryItems: [
+      { itemId: '4-I1', prodId: '1', prodName: '产品A', prodSpec: '型号A1', unit: '件', qty: 50, price: 50.00, amount: 2500.00, warehouseId: '1', remark: '' }
     ]
   }
 ]
@@ -1768,4 +2178,1271 @@ export const mockTrialBalanceList: TrialBalanceSummary[] = [
       { subjectId: '10', subjectCode: '1602', subjectName: '累计折旧', subjectLevel: 1, debitAmount: 0, creditAmount: 15000.00, balanceType: 'credit', balanceAmount: 15000.00 }
     ]
   }
+]
+
+// ==================== 销售出库/销售退货 ====================
+
+export interface SaleDocItem {
+  itemId: string
+  productId: string
+  productName: string
+  quantity: number
+  price: number
+  originalAmount: number
+  costAmount: number
+  categoryId: string
+  categoryName: string
+  remark: string
+}
+
+export interface SaleDoc {
+  bizDocId: string
+  bizDocNo: string
+  tradeTime: string
+  bizContactId: string
+  bizContactName: string
+  warehouseId: string
+  warehouseName: string
+  accountId: string
+  accountName: string
+  staffId: string
+  staffName: string
+  currencyCode: string
+  exchangeRate: number
+  deptId: string | null
+  deptName: string
+  projectId: string | null
+  projectName: string
+  totalAmount: number
+  remark: string
+  writerId: string
+  writerName: string
+  writerTime: string
+  updateId: string | null
+  updateName: string
+  updateTime: string | null
+  status: number
+  bizDocType: number
+  refBizDocId: string | null
+  arapStatus: number
+  voucherStatus: number
+  items: SaleDocItem[]
+}
+
+export const mockSaleOutDocs: SaleDoc[] = [
+  {
+    bizDocId: '1001', bizDocNo: 'SO-20240601-0001', tradeTime: '2024-06-01', bizContactId: '1', bizContactName: '北京客户A',
+    warehouseId: '1', warehouseName: '主仓库', accountId: '1', accountName: '工商银行',
+    staffId: '3', staffName: '王五', currencyCode: 'CNY', exchangeRate: 1.00000000,
+    deptId: '2', deptName: '销售部', projectId: '1', projectName: '电商平台开发',
+    totalAmount: 30000.00, remark: '产品销售出库', writerId: '3', writerName: '王五', writerTime: '2024-06-01 10:00:00',
+    updateId: null, updateName: '', updateTime: null, status: 0, bizDocType: 220, refBizDocId: null, arapStatus: 1, voucherStatus: 0,
+    items: [
+      { itemId: '1001-1', productId: '1', productName: '产品A', quantity: 20, price: 1000.00, originalAmount: 20000.00, costAmount: 15000.00, categoryId: '1', categoryName: '销售收入', remark: '' },
+      { itemId: '1001-2', productId: '2', productName: '产品B', quantity: 10, price: 1000.00, originalAmount: 10000.00, costAmount: 8000.00, categoryId: '1', categoryName: '销售收入', remark: '' }
+    ]
+  },
+  {
+    bizDocId: '1002', bizDocNo: 'SO-20240605-0002', tradeTime: '2024-06-05', bizContactId: '3', bizContactName: '广州客户C',
+    warehouseId: '2', warehouseName: '备用仓库', accountId: '2', accountName: '现金',
+    staffId: '3', staffName: '王五', currencyCode: 'CNY', exchangeRate: 1.00000000,
+    deptId: '2', deptName: '销售部', projectId: null, projectName: '',
+    totalAmount: 15000.00, remark: '零售出库', writerId: '3', writerName: '王五', writerTime: '2024-06-05 14:30:00',
+    updateId: null, updateName: '', updateTime: null, status: 0, bizDocType: 220, refBizDocId: null, arapStatus: 0, voucherStatus: 0,
+    items: [
+      { itemId: '1002-1', productId: '3', productName: '产品C', quantity: 50, price: 300.00, originalAmount: 15000.00, costAmount: 12000.00, categoryId: '1', categoryName: '销售收入', remark: '零售' }
+    ]
+  },
+  {
+    bizDocId: '1003', bizDocNo: 'SO-20240610-0003', tradeTime: '2024-06-10', bizContactId: '1', bizContactName: '北京客户A',
+    warehouseId: '1', warehouseName: '主仓库', accountId: '1', accountName: '工商银行',
+    staffId: '3', staffName: '王五', currencyCode: 'CNY', exchangeRate: 1.00000000,
+    deptId: '2', deptName: '销售部', projectId: '2', projectName: '市场推广活动',
+    totalAmount: 45000.00, remark: '大批量出货', writerId: '3', writerName: '王五', writerTime: '2024-06-10 09:00:00',
+    updateId: '2', updateName: '李四', updateTime: '2024-06-10 09:30:00', status: 0, bizDocType: 220, refBizDocId: null, arapStatus: 2, voucherStatus: 1,
+    items: [
+      { itemId: '1003-1', productId: '1', productName: '产品A', quantity: 30, price: 1000.00, originalAmount: 30000.00, costAmount: 22500.00, categoryId: '1', categoryName: '销售收入', remark: '' },
+      { itemId: '1003-2', productId: '3', productName: '产品C', quantity: 50, price: 300.00, originalAmount: 15000.00, costAmount: 10000.00, categoryId: '2', categoryName: '服务收入', remark: '' }
+    ]
+  },
+  {
+    bizDocId: '1004', bizDocNo: 'SO-20240615-0004', tradeTime: '2024-06-15', bizContactId: '3', bizContactName: '广州客户C',
+    warehouseId: '1', warehouseName: '主仓库', accountId: '3', accountName: '建设银行',
+    staffId: '1', staffName: '张三', currencyCode: 'CNY', exchangeRate: 1.00000000,
+    deptId: null, deptName: '', projectId: null, projectName: '',
+    totalAmount: 8000.00, remark: '退货冲红', writerId: '1', writerName: '张三', writerTime: '2024-06-15 11:00:00',
+    updateId: null, updateName: '', updateTime: null, status: 0, bizDocType: 520, refBizDocId: '1002', arapStatus: 0, voucherStatus: 0,
+    items: [
+      { itemId: '1004-1', productId: '3', productName: '产品C', quantity: 20, price: 300.00, originalAmount: 6000.00, costAmount: 4800.00, categoryId: '1', categoryName: '销售收入', remark: '客户退货' },
+      { itemId: '1004-2', productId: '2', productName: '产品B', quantity: 2, price: 1000.00, originalAmount: 2000.00, costAmount: 1600.00, categoryId: '1', categoryName: '销售收入', remark: '质量问题退货' }
+    ]
+  }
+]
+
+// ==================== 采购退货 ====================
+
+export interface PurchaseReturnDocItem {
+  itemId: string
+  productId: string
+  productName: string
+  quantity: number
+  price: number
+  originalAmount: number
+  costAmount: number
+  categoryId: string
+  categoryName: string
+  refItemId: string | null
+  remark: string
+}
+
+export interface PurchaseReturnDocLegacy {
+  bizDocId: string
+  bizDocNo: string
+  tradeTime: string
+  bizContactId: string
+  bizContactName: string
+  warehouseId: string
+  warehouseName: string
+  accountId: string
+  accountName: string
+  staffId: string
+  staffName: string
+  currencyCode: string
+  exchangeRate: number
+  deptId: string | null
+  deptName: string
+  projectId: string | null
+  projectName: string
+  totalAmount: number
+  remark: string
+  writerId: string
+  writerName: string
+  writerTime: string
+  updateId: string | null
+  updateName: string
+  updateTime: string | null
+  status: number
+  refBizDocId: string | null
+  voucherStatus: number
+  items: PurchaseReturnDocItem[]
+}
+
+export const mockPurchaseReturnDocs: import('@/types/inventory').PurchaseReturnDoc[] = [
+  {
+    bizDocId: '1',
+    bizDocNo: 'PR-20240603-0001',
+    bizType: 'PURCHASE_RETURN',
+    bizDate: '2024-06-03',
+    status: 2,
+    supplierId: '2',
+    supplierName: '上海供应商B',
+    contactId: '2',
+    contactName: '李四',
+    accountId: '1',
+    accountName: '工商银行',
+    totalQty: 20,
+    totalAmount: 10000.00,
+    bizStaffId: '1',
+    bizStaffName: '张三',
+    bizDeptId: '3',
+    bizDeptName: '技术部',
+    bizProjectId: '1',
+    bizProjectName: '电商平台开发',
+    remark: '质量不合格退货',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-03 10:00:00',
+    updateId: '1',
+    updateName: '管理员',
+    updateTime: '2024-06-03 14:30:00',
+    auditId: '1',
+    auditName: '管理员',
+    auditTime: '2024-06-03 15:00:00',
+    categoryItems: [
+      { itemId: '1-C1', categoryId: '3', categoryName: '办公费用', amount: 10000.00, remark: '质量问题' }
+    ],
+    inventoryItems: [
+      { itemId: '1-I1', prodId: '1', prodName: '产品A', prodSpec: '型号A1', unit: '件', qty: 20, price: 500.00, amount: 10000.00, warehouseId: '1', remark: '质量不合格退回' }
+    ]
+  },
+  {
+    bizDocId: '2',
+    bizDocNo: 'PR-20240610-0002',
+    bizType: 'PURCHASE_RETURN',
+    bizDate: '2024-06-10',
+    status: 1,
+    supplierId: '4',
+    supplierName: '深圳供应商D',
+    contactId: '',
+    contactName: '',
+    accountId: '2',
+    accountName: '现金',
+    totalQty: 10,
+    totalAmount: 1200.00,
+    bizStaffId: '2',
+    bizStaffName: '李四',
+    bizDeptId: '2',
+    bizDeptName: '销售部',
+    bizProjectId: null,
+    bizProjectName: '',
+    remark: '多发货物退回',
+    createId: '2',
+    createName: '李四',
+    createTime: '2024-06-10 11:20:00',
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '2-C1', categoryId: '3', categoryName: '办公费用', amount: 1200.00, remark: '' }
+    ],
+    inventoryItems: [
+      { itemId: '2-I1', prodId: '3', prodName: '产品C', prodSpec: '型号C3', unit: '箱', qty: 10, price: 120.00, amount: 1200.00, warehouseId: '3', remark: '多发货物退回' }
+    ]
+  },
+  {
+    bizDocId: '3',
+    bizDocNo: 'PR-20240618-0003',
+    bizType: 'PURCHASE_RETURN',
+    bizDate: '2024-06-18',
+    status: 0,
+    supplierId: '2',
+    supplierName: '上海供应商B',
+    contactId: '2',
+    contactName: '李四',
+    accountId: '3',
+    accountName: '建设银行',
+    totalQty: 50,
+    totalAmount: 25000.00,
+    bizStaffId: '1',
+    bizStaffName: '张三',
+    bizDeptId: '3',
+    bizDeptName: '技术部',
+    bizProjectId: '2',
+    bizProjectName: '市场推广活动',
+    remark: '规格不符退货',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-18 09:00:00',
+    updateId: null,
+    updateName: '',
+    updateTime: null,
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '3-C1', categoryId: '3', categoryName: '办公费用', amount: 25000.00, remark: '规格不符' }
+    ],
+    inventoryItems: [
+      { itemId: '3-I1', prodId: '2', prodName: '产品B', prodSpec: '型号B2', unit: '件', qty: 50, price: 500.00, amount: 25000.00, warehouseId: '1', remark: '规格不符退回' }
+    ]
+  },
+  {
+    bizDocId: '4',
+    bizDocNo: 'PR-20240625-0004',
+    bizType: 'PURCHASE_RETURN',
+    bizDate: '2024-06-25',
+    status: 3,
+    supplierId: '4',
+    supplierName: '深圳供应商D',
+    contactId: '',
+    contactName: '',
+    accountId: '1',
+    accountName: '工商银行',
+    totalQty: 5,
+    totalAmount: 500.00,
+    bizStaffId: '2',
+    bizStaffName: '李四',
+    bizDeptId: null,
+    bizDeptName: '',
+    bizProjectId: null,
+    bizProjectName: '',
+    remark: '已撤销的退货单',
+    createId: '1',
+    createName: '管理员',
+    createTime: '2024-06-25 16:40:00',
+    updateId: '1',
+    updateName: '管理员',
+    updateTime: '2024-06-26 10:00:00',
+    auditId: null,
+    auditName: '',
+    auditTime: null,
+    categoryItems: [
+      { itemId: '4-C1', categoryId: '3', categoryName: '办公费用', amount: 500.00, remark: '' }
+    ],
+    inventoryItems: [
+      { itemId: '4-I1', prodId: '5', prodName: '配件E', prodSpec: '型号E5', unit: '个', qty: 5, price: 100.00, amount: 500.00, warehouseId: '2', remark: '已撤销' }
+    ]
+  }
+]
+
+export const mockAttachments: AttachmentDoc[] = [
+  {
+    attachmentId: '1',
+    attachmentName: '2024年6月销售合同',
+    fileName: 'sales_contract_202406.pdf',
+    fileSize: 1048576,
+    fileType: 'application/pdf',
+    fileUrl: 'https://example.com/files/sales_contract_202406.pdf',
+    bizType: 1,
+    bizDocId: 'IN202406001',
+    uploaderId: '1',
+    uploaderName: '张三',
+    uploadTime: '2024-06-01 10:35:00',
+    remark: '客户签订的销售合同扫描件'
+  },
+  {
+    attachmentId: '2',
+    attachmentName: '办公费用发票',
+    fileName: 'office_invoice.jpg',
+    fileSize: 524288,
+    fileType: 'image/jpeg',
+    fileUrl: 'https://example.com/files/office_invoice.jpg',
+    bizType: 2,
+    bizDocId: 'EX202406001',
+    uploaderId: '2',
+    uploaderName: '李四',
+    uploadTime: '2024-06-02 14:20:00',
+    remark: '办公用品采购发票照片'
+  },
+  {
+    attachmentId: '3',
+    attachmentName: '客户还款协议',
+    fileName: 'repayment_agreement.docx',
+    fileSize: 204800,
+    fileType: 'application/vnd.openxmlformats',
+    fileUrl: 'https://example.com/files/repayment_agreement.docx',
+    bizType: 3,
+    bizDocId: 'ARAP202406001',
+    uploaderId: '1',
+    uploaderName: '张三',
+    uploadTime: '2024-06-05 09:15:00',
+    remark: ''
+  },
+  {
+    attachmentId: '4',
+    attachmentName: '固定资产购置清单',
+    fileName: 'fixed_asset_list.xlsx',
+    fileSize: 358400,
+    fileType: 'application/vnd.openxmlformats',
+    fileUrl: 'https://example.com/files/fixed_asset_list.xlsx',
+    bizType: 5,
+    bizDocId: 'GDZC202406001',
+    uploaderId: '3',
+    uploaderName: '王五',
+    uploadTime: '2024-06-10 16:40:00',
+    remark: '2024年第二季度固定资产明细'
+  }
+]
+
+export interface AuditRecord {
+  id: string
+  bizDocType: string
+  bizDocTypeName: string
+  bizDocId: string
+  bizDocNo: string
+  auditStatus: number
+  auditStatusName: string
+  auditorId: string | null
+  auditorName: string
+  auditTime: string | null
+  auditRemark: string
+  createTime: string
+  logs: AuditLog[]
+}
+
+export interface AuditLog {
+  id: string
+  auditAction: number
+  auditActionName: string
+  operatorId: string
+  operatorName: string
+  operatorTime: string
+  remark: string
+}
+
+export const mockAuditRecords: AuditRecord[] = [
+  {
+    id: 'A001',
+    bizDocType: 'INCOME',
+    bizDocTypeName: '收入单据',
+    bizDocId: '1',
+    bizDocNo: 'IN202406001',
+    auditStatus: 1,
+    auditStatusName: '已审核',
+    auditorId: '1',
+    auditorName: '管理员',
+    auditTime: '2024-06-01 11:00:00',
+    auditRemark: '审核通过',
+    createTime: '2024-06-01 10:30:00',
+    logs: [
+      { id: 'L1', auditAction: 1, auditActionName: '审核通过', operatorId: '1', operatorName: '管理员', operatorTime: '2024-06-01 11:00:00', remark: '审核通过' }
+    ]
+  },
+  {
+    id: 'A002',
+    bizDocType: 'EXPENSE',
+    bizDocTypeName: '支出单据',
+    bizDocId: '2',
+    bizDocNo: 'EX202406001',
+    auditStatus: 2,
+    auditStatusName: '已驳回',
+    auditorId: '1',
+    auditorName: '管理员',
+    auditTime: '2024-06-02 15:00:00',
+    auditRemark: '缺少发票附件，请补充后重新提交',
+    createTime: '2024-06-02 14:15:00',
+    logs: [
+      { id: 'L1', auditAction: 2, auditActionName: '驳回', operatorId: '1', operatorName: '管理员', operatorTime: '2024-06-02 15:00:00', remark: '缺少发票附件，请补充后重新提交' }
+    ]
+  },
+  {
+    id: 'A003',
+    bizDocType: 'PAYMENT',
+    bizDocTypeName: '付款单据',
+    bizDocId: 'P2',
+    bizDocNo: 'PY202406002',
+    auditStatus: 0,
+    auditStatusName: '待审核',
+    auditorId: null,
+    auditorName: '',
+    auditTime: null,
+    auditRemark: '',
+    createTime: '2024-06-09 16:50:00',
+    logs: []
+  },
+  {
+    id: 'A004',
+    bizDocType: 'RECEIPT',
+    bizDocTypeName: '收款单据',
+    bizDocId: 'R2',
+    bizDocNo: 'RC202406002',
+    auditStatus: 0,
+    auditStatusName: '待审核',
+    auditorId: null,
+    auditorName: '',
+    auditTime: null,
+    auditRemark: '',
+    createTime: '2024-06-07 16:50:00',
+    logs: []
+  },
+  {
+    id: 'A005',
+    bizDocType: 'INCOME',
+    bizDocTypeName: '收入单据',
+    bizDocId: '3',
+    bizDocNo: 'IN202406003',
+    auditStatus: 3,
+    auditStatusName: '已撤销',
+    auditorId: '1',
+    auditorName: '管理员',
+    auditTime: '2024-06-06 10:00:00',
+    auditRemark: '',
+    createTime: '2024-06-05 14:05:00',
+    logs: [
+      { id: 'L1', auditAction: 1, auditActionName: '审核通过', operatorId: '1', operatorName: '管理员', operatorTime: '2024-06-05 15:00:00', remark: '审核通过' },
+      { id: 'L2', auditAction: 3, auditActionName: '撤销审核', operatorId: '1', operatorName: '管理员', operatorTime: '2024-06-06 10:00:00', remark: '发现有误，撤销审核' }
+    ]
+  }
+]
+
+export interface SealRecord {
+  id: string
+  sealDate: string
+  sealType: number
+  sealTypeName: string
+  previousDate: string | null
+  remark: string
+  operatorId: string
+  operatorName: string
+  operateTime: string
+}
+
+export const mockSealRecords: SealRecord[] = [
+  { id: 'S001', sealDate: '2024-03-31', sealType: 1, sealTypeName: '新增封账', previousDate: null, remark: '首次封账，封账至3月底', operatorId: '1', operatorName: '管理员', operateTime: '2024-04-01 09:00:00' },
+  { id: 'S002', sealDate: '2024-04-30', sealType: 2, sealTypeName: '调整封账（延长）', previousDate: '2024-03-31', remark: '延长至4月底', operatorId: '1', operatorName: '管理员', operateTime: '2024-05-02 10:00:00' },
+  { id: 'S003', sealDate: '2024-05-31', sealType: 2, sealTypeName: '调整封账（延长）', previousDate: '2024-04-30', remark: '延长至5月底', operatorId: '2', operatorName: '李四', operateTime: '2024-06-01 11:00:00' }
+]
+
+export interface SealCheckItem {
+  code: string
+  name: string
+  level: 'block' | 'warn'
+  count: number
+  description: string
+}
+
+export interface SealPreCheckResult {
+  items: SealCheckItem[]
+  pass: boolean
+  warnings: number
+  blocks: number
+}
+
+export const mockSealPreCheck: SealPreCheckResult = {
+  items: [
+    { code: 'UN AUDITED', name: '未审核单据', level: 'block', count: 2, description: '封账日期前存在未审核的业务单据' },
+    { code: 'INVENTORY_NEG', name: '库存异常', level: 'block', count: 0, description: '库存数量小于0的记录' },
+    { code: 'VOUCHER_UNBALANCED', name: '凭证不平衡', level: 'block', count: 0, description: '借贷不平衡的凭证' },
+    { code: 'UNOFFSET_ARAP', name: '未核销往来', level: 'warn', count: 5, description: '存在未核销的应收应付款项' },
+    { code: 'BANK_UNRECONCILED', name: '银行对账', level: 'warn', count: 1, description: '存在未完成对账的银行账户' }
+  ],
+  pass: false,
+  warnings: 6,
+  blocks: 2
+}
+
+export interface StocktakeDetail {
+  prodId: string
+  prodName: string
+  prodSpec: string
+  unit: string
+  bookQty: number
+  actualQty: number
+  diffQty: number
+  costPrice: number
+  diffAmount: number
+}
+
+export interface StocktakeRecord {
+  id: string
+  docNo: string
+  takeDate: string
+  warehouseId: string
+  warehouseName: string
+  takeType: number
+  takeTypeName: string
+  status: number
+  statusName: string
+  totalKinds: number
+  profitKinds: number
+  lossKinds: number
+  profitAmount: number
+  lossAmount: number
+  writerId: string
+  writerName: string
+  writeTime: string
+  remark: string
+  details: StocktakeDetail[]
+  relatedProfitDocNo: string | null
+  relatedLossDocNo: string | null
+}
+
+export const mockStocktakeRecords: StocktakeRecord[] = [
+  {
+    id: 'ST001',
+    docNo: 'ST-20240601-0001',
+    takeDate: '2024-06-01',
+    warehouseId: '1',
+    warehouseName: '主仓库',
+    takeType: 1,
+    takeTypeName: '全盘',
+    status: 1,
+    statusName: '已完成',
+    totalKinds: 4,
+    profitKinds: 1,
+    lossKinds: 1,
+    profitAmount: 500,
+    lossAmount: 1000,
+    writerId: '1',
+    writerName: '张三',
+    writeTime: '2024-06-01 10:00:00',
+    remark: '6月月度盘点',
+    relatedProfitDocNo: 'PI-20240601-0001',
+    relatedLossDocNo: 'LO-20240601-0001',
+    details: [
+      { prodId: 'P1', prodName: '产品A', prodSpec: '型号A1', unit: '件', bookQty: 100, actualQty: 105, diffQty: 5, costPrice: 100, diffAmount: 500 },
+      { prodId: 'P2', prodName: '产品B', prodSpec: '型号B2', unit: '件', bookQty: 50, actualQty: 48, diffQty: -2, costPrice: 500, diffAmount: 1000 },
+      { prodId: 'P3', prodName: '产品C', prodSpec: '型号C3', unit: '个', bookQty: 200, actualQty: 200, diffQty: 0, costPrice: 20, diffAmount: 0 },
+      { prodId: 'P4', prodName: '产品D', prodSpec: '型号D4', unit: '套', bookQty: 30, actualQty: 30, diffQty: 0, costPrice: 80, diffAmount: 0 }
+    ]
+  },
+  {
+    id: 'ST002',
+    docNo: 'ST-20240615-0002',
+    takeDate: '2024-06-15',
+    warehouseId: '2',
+    warehouseName: '备用仓库',
+    takeType: 2,
+    takeTypeName: '抽盘',
+    status: 0,
+    statusName: '盘点中',
+    totalKinds: 2,
+    profitKinds: 0,
+    lossKinds: 0,
+    profitAmount: 0,
+    lossAmount: 0,
+    writerId: '3',
+    writerName: '王五',
+    writeTime: '2024-06-15 09:30:00',
+    remark: '抽盘部分产品',
+    relatedProfitDocNo: null,
+    relatedLossDocNo: null,
+    details: [
+      { prodId: 'P5', prodName: '配件E', prodSpec: '型号E5', unit: '个', bookQty: 80, actualQty: 80, diffQty: 0, costPrice: 50, diffAmount: 0 },
+      { prodId: 'P6', prodName: '配件F', prodSpec: '型号F6', unit: '个', bookQty: 60, actualQty: 60, diffQty: 0, costPrice: 30, diffAmount: 0 }
+    ]
+  }
+]
+
+export interface AmortizationRecord {
+  id: string
+  bizDocNo: string
+  tradeDate: string
+  name: string
+  totalAmount: number
+  accountId: string
+  accountName: string
+  categoryId: string
+  categoryName: string
+  staffId: string
+  staffName: string
+  deptId: string | null
+  deptName: string
+  projectId: string | null
+  projectName: string
+  currencyCode: string
+  exchangeRate: number
+  amortStartDate: string
+  amortEndDate: string
+  amortPeriodType: number
+  amortPeriodTypeName: string
+  amortMethod: number
+  periodAmount: number
+  totalPeriods: number
+  remainingPeriods: number
+  amortizedAmount: number
+  status: number
+  statusName: string
+  nextAmortDate: string
+  remark: string
+  writerId: string
+  writerName: string
+  writeTime: string
+  updateTime: string
+  voucherNo: string
+  amortRecords: AmortizationExecRecord[]
+}
+
+export interface AmortizationExecRecord {
+  recordId: string
+  periodNo: number
+  amortDate: string
+  amortAmount: number
+  voucherNo: string
+  createTime: string
+}
+
+export const mockAmortizations: AmortizationRecord[] = [
+  {
+    id: 'AM001',
+    bizDocNo: 'AT-20240401-0001',
+    tradeDate: '2024-04-01',
+    name: '预付房租',
+    totalAmount: 120000,
+    accountId: '1',
+    accountName: '工商银行',
+    categoryId: '3',
+    categoryName: '办公费用',
+    staffId: '1',
+    staffName: '张三',
+    deptId: '1',
+    deptName: '财务部',
+    projectId: null,
+    projectName: '',
+    currencyCode: 'CNY',
+    exchangeRate: 1,
+    amortStartDate: '2024-04-01',
+    amortEndDate: '2025-03-01',
+    amortPeriodType: 1,
+    amortPeriodTypeName: '月',
+    amortMethod: 1,
+    periodAmount: 10000,
+    totalPeriods: 12,
+    remainingPeriods: 9,
+    amortizedAmount: 30000,
+    status: 1,
+    statusName: '执行中',
+    nextAmortDate: '2024-07-01',
+    remark: '年度房租',
+    writerId: '1',
+    writerName: '张三',
+    writeTime: '2024-04-01 14:00:00',
+    updateTime: '2024-07-01 09:00:00',
+    voucherNo: '记-202404-001',
+    amortRecords: [
+      { recordId: 'R1', periodNo: 1, amortDate: '2024-04-01', amortAmount: 10000, voucherNo: '记-202404-002', createTime: '2024-04-01 00:00:00' },
+      { recordId: 'R2', periodNo: 2, amortDate: '2024-05-01', amortAmount: 10000, voucherNo: '记-202405-001', createTime: '2024-05-01 00:00:00' },
+      { recordId: 'R3', periodNo: 3, amortDate: '2024-06-01', amortAmount: 10000, voucherNo: '记-202406-001', createTime: '2024-06-01 00:00:00' }
+    ]
+  },
+  {
+    id: 'AM002',
+    bizDocNo: 'AT-20240501-0002',
+    tradeDate: '2024-05-01',
+    name: '预付保险费',
+    totalAmount: 24000,
+    accountId: '1',
+    accountName: '工商银行',
+    categoryId: '3',
+    categoryName: '办公费用',
+    staffId: '2',
+    staffName: '李四',
+    deptId: '1',
+    deptName: '财务部',
+    projectId: null,
+    projectName: '',
+    currencyCode: 'CNY',
+    exchangeRate: 1,
+    amortStartDate: '2024-05-01',
+    amortEndDate: '2025-04-01',
+    amortPeriodType: 1,
+    amortPeriodTypeName: '月',
+    amortMethod: 1,
+    periodAmount: 2000,
+    totalPeriods: 12,
+    remainingPeriods: 12,
+    amortizedAmount: 0,
+    status: 0,
+    statusName: '待执行',
+    nextAmortDate: '2024-05-01',
+    remark: '全年保险',
+    writerId: '2',
+    writerName: '李四',
+    writeTime: '2024-05-01 10:00:00',
+    updateTime: '2024-05-01 10:00:00',
+    voucherNo: '记-202405-010',
+    amortRecords: []
+  },
+  {
+    id: 'AM003',
+    bizDocNo: 'AT-20240301-0003',
+    tradeDate: '2024-03-01',
+    name: '软件授权费',
+    totalAmount: 90000,
+    accountId: '3',
+    accountName: '建设银行',
+    categoryId: '3',
+    categoryName: '办公费用',
+    staffId: '1',
+    staffName: '张三',
+    deptId: '3',
+    deptName: '技术部',
+    projectId: '1',
+    projectName: '电商平台开发',
+    currencyCode: 'CNY',
+    exchangeRate: 1,
+    amortStartDate: '2024-03-01',
+    amortEndDate: '2025-02-01',
+    amortPeriodType: 1,
+    amortPeriodTypeName: '月',
+    amortMethod: 1,
+    periodAmount: 2500,
+    totalPeriods: 36,
+    remainingPeriods: 24,
+    amortizedAmount: 30000,
+    status: 1,
+    statusName: '执行中',
+    nextAmortDate: '2024-07-01',
+    remark: '软件授权三年期，按36个月摊销',
+    writerId: '1',
+    writerName: '张三',
+    writeTime: '2024-03-01 09:00:00',
+    updateTime: '2024-07-01 09:00:00',
+    voucherNo: '记-202403-005',
+    amortRecords: [
+      { recordId: 'R1', periodNo: 1, amortDate: '2024-03-01', amortAmount: 2500, voucherNo: '记-202403-006', createTime: '2024-03-01 00:00:00' },
+      { recordId: 'R2', periodNo: 2, amortDate: '2024-04-01', amortAmount: 2500, voucherNo: '记-202404-001', createTime: '2024-04-01 00:00:00' },
+      { recordId: 'R3', periodNo: 3, amortDate: '2024-05-01', amortAmount: 2500, voucherNo: '记-202405-001', createTime: '2024-05-01 00:00:00' },
+      { recordId: 'R4', periodNo: 4, amortDate: '2024-06-01', amortAmount: 2500, voucherNo: '记-202406-001', createTime: '2024-06-01 00:00:00' },
+      { recordId: 'R5', periodNo: 5, amortDate: '2024-07-01', amortAmount: 2500, voucherNo: '记-202407-001', createTime: '2024-07-01 00:00:00' },
+      { recordId: 'R6', periodNo: 6, amortDate: '2024-08-01', amortAmount: 2500, voucherNo: '记-202408-001', createTime: '2024-08-01 00:00:00' },
+      { recordId: 'R7', periodNo: 7, amortDate: '2024-09-01', amortAmount: 2500, voucherNo: '记-202409-001', createTime: '2024-09-01 00:00:00' },
+      { recordId: 'R8', periodNo: 8, amortDate: '2024-10-01', amortAmount: 2500, voucherNo: '记-202410-001', createTime: '2024-10-01 00:00:00' },
+      { recordId: 'R9', periodNo: 9, amortDate: '2024-11-01', amortAmount: 2500, voucherNo: '记-202411-001', createTime: '2024-11-01 00:00:00' },
+      { recordId: 'R10', periodNo: 10, amortDate: '2024-12-01', amortAmount: 2500, voucherNo: '记-202412-001', createTime: '2024-12-01 00:00:00' },
+      { recordId: 'R11', periodNo: 11, amortDate: '2025-01-01', amortAmount: 2500, voucherNo: '记-202501-001', createTime: '2025-01-01 00:00:00' },
+      { recordId: 'R12', periodNo: 12, amortDate: '2025-02-01', amortAmount: 2500, voucherNo: '记-202502-001', createTime: '2025-02-01 00:00:00' }
+    ]
+  },
+  {
+    id: 'AM004',
+    bizDocNo: 'AT-20240101-0004',
+    tradeDate: '2024-01-01',
+    name: '办公装修费',
+    totalAmount: 60000,
+    accountId: '1',
+    accountName: '工商银行',
+    categoryId: '3',
+    categoryName: '办公费用',
+    staffId: '2',
+    staffName: '李四',
+    deptId: '1',
+    deptName: '财务部',
+    projectId: null,
+    projectName: '',
+    currencyCode: 'CNY',
+    exchangeRate: 1,
+    amortStartDate: '2024-01-01',
+    amortEndDate: '2024-12-01',
+    amortPeriodType: 1,
+    amortPeriodTypeName: '月',
+    amortMethod: 1,
+    periodAmount: 5000,
+    totalPeriods: 12,
+    remainingPeriods: 0,
+    amortizedAmount: 60000,
+    status: 2,
+    statusName: '已完成',
+    nextAmortDate: '',
+    remark: '办公室装修摊销',
+    writerId: '2',
+    writerName: '李四',
+    writeTime: '2024-01-01 10:00:00',
+    updateTime: '2024-12-01 09:00:00',
+    voucherNo: '记-202401-001',
+    amortRecords: []
+  },
+  {
+    id: 'AM005',
+    bizDocNo: 'AT-20240201-0005',
+    tradeDate: '2024-02-01',
+    name: '展会活动费',
+    totalAmount: 30000,
+    accountId: '1',
+    accountName: '工商银行',
+    categoryId: '4',
+    categoryName: '差旅费',
+    staffId: '3',
+    staffName: '王五',
+    deptId: '2',
+    deptName: '销售部',
+    projectId: '2',
+    projectName: '市场推广活动',
+    currencyCode: 'CNY',
+    exchangeRate: 1,
+    amortStartDate: '2024-02-01',
+    amortEndDate: '2024-10-01',
+    amortPeriodType: 1,
+    amortPeriodTypeName: '月',
+    amortMethod: 1,
+    periodAmount: 3750,
+    totalPeriods: 8,
+    remainingPeriods: 5,
+    amortizedAmount: 11250,
+    status: 3,
+    statusName: '已中止',
+    nextAmortDate: '',
+    remark: '中途取消展会合作，方案中止',
+    writerId: '3',
+    writerName: '王五',
+    writeTime: '2024-02-01 10:00:00',
+    updateTime: '2024-06-15 14:00:00',
+    voucherNo: '记-202402-002',
+    amortRecords: [
+      { recordId: 'R1', periodNo: 1, amortDate: '2024-02-01', amortAmount: 3750, voucherNo: '记-202402-003', createTime: '2024-02-01 00:00:00' },
+      { recordId: 'R2', periodNo: 2, amortDate: '2024-03-01', amortAmount: 3750, voucherNo: '记-202403-001', createTime: '2024-03-01 00:00:00' },
+      { recordId: 'R3', periodNo: 3, amortDate: '2024-04-01', amortAmount: 3750, voucherNo: '记-202404-001', createTime: '2024-04-01 00:00:00' }
+    ]
+  }
+]
+
+export interface InventoryBalanceItem {
+  id: string
+  prodId: string
+  prodCode: string
+  prodName: string
+  prodSpec: string
+  unit: string
+  categoryId: string
+  categoryName: string
+  warehouseId: string
+  warehouseName: string
+  stockQty: number
+  totalCost: number
+  costPrice: number
+  safeStock: number
+  updateTime: string
+  status: number
+  statusName: string
+}
+
+export interface InventoryFlowItem {
+  id: string
+  bizType: string
+  bizTypeName: string
+  bizDocNo: string
+  changeQty: number
+  changeCost: number
+  afterQty: number
+  afterCost: number
+  operateTime: string
+}
+
+export const mockInventoryBalances: InventoryBalanceItem[] = [
+  { id: 'IB001', prodId: 'P1', prodCode: 'SP001', prodName: '产品A', prodSpec: '型号A1', unit: '件', categoryId: '1', categoryName: '成品', warehouseId: '1', warehouseName: '主仓库', stockQty: 120, totalCost: 12000, costPrice: 100, safeStock: 50, updateTime: '2024-06-20 18:00:00', status: 1, statusName: '正常' },
+  { id: 'IB002', prodId: 'P2', prodCode: 'SP002', prodName: '产品B', prodSpec: '型号B2', unit: '件', categoryId: '1', categoryName: '成品', warehouseId: '1', warehouseName: '主仓库', stockQty: 10, totalCost: 5000, costPrice: 500, safeStock: 20, updateTime: '2024-06-20 18:00:00', status: 2, statusName: '库存不足' },
+  { id: 'IB003', prodId: 'P3', prodCode: 'SP003', prodName: '产品C', prodSpec: '型号C3', unit: '个', categoryId: '2', categoryName: '半成品', warehouseId: '3', warehouseName: '成品仓库', stockQty: 0, totalCost: 0, costPrice: 0, safeStock: 10, updateTime: '2024-06-20 18:00:00', status: 3, statusName: '零库存' },
+  { id: 'IB004', prodId: 'P4', prodCode: 'SP004', prodName: '原材料D', prodSpec: '规格D4', unit: '公斤', categoryId: '3', categoryName: '原材料', warehouseId: '2', warehouseName: '备用仓库', stockQty: 800, totalCost: 40000, costPrice: 50, safeStock: 100, updateTime: '2024-06-20 18:00:00', status: 1, statusName: '正常' },
+  { id: 'IB005', prodId: 'P5', prodCode: 'SP005', prodName: '配件E', prodSpec: '型号E5', unit: '个', categoryId: '4', categoryName: '配件', warehouseId: '1', warehouseName: '主仓库', stockQty: 1500, totalCost: 75000, costPrice: 50, safeStock: 200, updateTime: '2024-06-20 18:00:00', status: 1, statusName: '正常' }
+]
+
+export const mockInventoryFlows: InventoryFlowItem[] = [
+  { id: 'F001', bizType: 'IN', bizTypeName: '采购入库', bizDocNo: 'PI-20240610-0001', changeQty: 100, changeCost: 10000, afterQty: 120, afterCost: 12000, operateTime: '2024-06-10 10:00:00' },
+  { id: 'F002', bizType: 'OUT', bizTypeName: '销售出库', bizDocNo: 'SO-20240615-0001', changeQty: -20, changeCost: -2000, afterQty: 20, afterCost: 2000, operateTime: '2024-06-15 14:00:00' },
+  { id: 'F003', bizType: 'ADJ', bizTypeName: '成本调整', bizDocNo: 'CA-20240618-0001', changeQty: 0, changeCost: 1000, afterQty: 20, afterCost: 3000, operateTime: '2024-06-18 09:00:00' }
+]
+
+export interface CostAdjustDetail {
+  id: string
+  prodId: string
+  prodName: string
+  prodSpec: string
+  unit: string
+  warehouseId: string
+  warehouseName: string
+  stockQty: number
+  beforeCostPrice: number
+  afterCostPrice: number
+  adjustAmount: number
+  remark: string
+}
+
+export interface CostAdjustDoc {
+  id: string
+  docNo: string
+  adjustDate: string
+  warehouseId: string
+  warehouseName: string
+  reason: string
+  status: number
+  statusName: string
+  totalAmount: number
+  writerId: string
+  writerName: string
+  writeTime: string
+  remark: string
+  details: CostAdjustDetail[]
+  voucherNo: string | null
+}
+
+export const mockCostAdjustDocs: CostAdjustDoc[] = [
+  {
+    id: 'CA001',
+    docNo: 'CA-20240618-0001',
+    adjustDate: '2024-06-18',
+    warehouseId: '1',
+    warehouseName: '主仓库',
+    reason: '上期盘点差异调整',
+    status: 1,
+    statusName: '已确认',
+    totalAmount: 1500,
+    writerId: '1',
+    writerName: '张三',
+    writeTime: '2024-06-18 09:00:00',
+    remark: '按盘点报告调整',
+    voucherNo: '记-202406-003',
+    details: [
+      { id: 'D1', prodId: 'P1', prodName: '产品A', prodSpec: '型号A1', unit: '件', warehouseId: '1', warehouseName: '主仓库', stockQty: 100, beforeCostPrice: 90, afterCostPrice: 100, adjustAmount: 1000, remark: '加权平均价修正' },
+      { id: 'D2', prodId: 'P2', prodName: '产品B', prodSpec: '型号B2', unit: '件', warehouseId: '1', warehouseName: '主仓库', stockQty: 10, beforeCostPrice: 450, afterCostPrice: 500, adjustAmount: 500, remark: '采购单价波动调整' }
+    ]
+  },
+  {
+    id: 'CA002',
+    docNo: 'CA-20240620-0002',
+    adjustDate: '2024-06-20',
+    warehouseId: '2',
+    warehouseName: '备用仓库',
+    reason: '手工调整',
+    status: 0,
+    statusName: '草稿',
+    totalAmount: 0,
+    writerId: '3',
+    writerName: '王五',
+    writeTime: '2024-06-20 14:00:00',
+    remark: '',
+    voucherNo: null,
+    details: []
+  }
+]
+
+export interface AssembleDetail {
+  id: string
+  prodId: string
+  prodName: string
+  prodSpec: string
+  unit: string
+  qty: number
+  price: number
+  amount: number
+  warehouseId: string
+  remark: string
+}
+
+export interface AssembleDoc {
+  id: string
+  docNo: string
+  bizDate: string
+  bizType: number
+  bizTypeName: string
+  warehouseId: string
+  warehouseName: string
+  mainProdId: string
+  mainProdName: string
+  mainProdSpec: string
+  mainUnit: string
+  mainQty: number
+  mainPrice: number
+  mainAmount: number
+  status: number
+  statusName: string
+  reason: string
+  writerId: string
+  writerName: string
+  writeTime: string
+  remark: string
+  voucherNo: string | null
+  details: AssembleDetail[]
+}
+
+export const mockAssembleDocs: AssembleDoc[] = [
+  {
+    id: 'AS001',
+    docNo: 'AS-20240612-0001',
+    bizDate: '2024-06-12',
+    bizType: 1,
+    bizTypeName: '组装',
+    warehouseId: '3',
+    warehouseName: '成品仓库',
+    mainProdId: 'P1',
+    mainProdName: '产品A',
+    mainProdSpec: '型号A1',
+    mainUnit: '件',
+    mainQty: 10,
+    mainPrice: 100,
+    mainAmount: 1000,
+    status: 1,
+    statusName: '已完成',
+    reason: '组装成品',
+    writerId: '1',
+    writerName: '张三',
+    writeTime: '2024-06-12 10:00:00',
+    remark: '10套产品A组装',
+    voucherNo: '记-202406-004',
+    details: [
+      { id: 'D1', prodId: 'P4', prodName: '原材料D', prodSpec: '规格D4', unit: '公斤', qty: 50, price: 50, amount: 2500, warehouseId: '2', remark: '主要原料' },
+      { id: 'D2', prodId: 'P5', prodName: '配件E', prodSpec: '型号E5', unit: '个', qty: 20, price: 25, amount: 500, warehouseId: '1', remark: '配件' }
+    ]
+  },
+  {
+    id: 'AS002',
+    docNo: 'AS-20240618-0002',
+    bizDate: '2024-06-18',
+    bizType: 2,
+    bizTypeName: '拆分',
+    warehouseId: '1',
+    warehouseName: '主仓库',
+    mainProdId: 'P1',
+    mainProdName: '产品A',
+    mainProdSpec: '型号A1',
+    mainUnit: '件',
+    mainQty: 5,
+    mainPrice: 100,
+    mainAmount: 500,
+    status: 0,
+    statusName: '草稿',
+    reason: '拆分成配件',
+    writerId: '3',
+    writerName: '王五',
+    writeTime: '2024-06-18 15:00:00',
+    remark: '',
+    voucherNo: null,
+    details: []
+  }
+]
+
+export interface StockProfitLossDetail {
+  id: string
+  prodId: string
+  prodName: string
+  prodSpec: string
+  unit: string
+  qty: number
+  costPrice: number
+  amount: number
+  warehouseId: string
+  remark: string
+}
+
+export interface StockProfitLossDoc {
+  id: string
+  docNo: string
+  bizDate: string
+  bizType: number
+  bizTypeName: string
+  warehouseId: string
+  warehouseName: string
+  relatedStocktakeNo: string | null
+  status: number
+  statusName: string
+  totalKinds: number
+  totalQty: number
+  totalAmount: number
+  writerId: string
+  writerName: string
+  writeTime: string
+  remark: string
+  voucherNo: string | null
+  details: StockProfitLossDetail[]
+}
+
+export const mockStockProfitLossDocs: StockProfitLossDoc[] = [
+  {
+    id: 'PI001',
+    docNo: 'PI-20240601-0001',
+    bizDate: '2024-06-01',
+    bizType: 1,
+    bizTypeName: '盘盈入库',
+    warehouseId: '1',
+    warehouseName: '主仓库',
+    relatedStocktakeNo: 'ST-20240601-0001',
+    status: 1,
+    statusName: '已完成',
+    totalKinds: 1,
+    totalQty: 5,
+    totalAmount: 500,
+    writerId: '1',
+    writerName: '张三',
+    writeTime: '2024-06-01 11:00:00',
+    remark: '盘点盈余入库',
+    voucherNo: '记-202406-001',
+    details: [
+      { id: 'D1', prodId: 'P1', prodName: '产品A', prodSpec: '型号A1', unit: '件', qty: 5, costPrice: 100, amount: 500, warehouseId: '1', remark: '盘盈入库' }
+    ]
+  },
+  {
+    id: 'LO001',
+    docNo: 'LO-20240601-0001',
+    bizDate: '2024-06-01',
+    bizType: 2,
+    bizTypeName: '盘亏出库',
+    warehouseId: '1',
+    warehouseName: '主仓库',
+    relatedStocktakeNo: 'ST-20240601-0001',
+    status: 1,
+    statusName: '已完成',
+    totalKinds: 1,
+    totalQty: 2,
+    totalAmount: 1000,
+    writerId: '1',
+    writerName: '张三',
+    writeTime: '2024-06-01 11:30:00',
+    remark: '盘点亏损出库',
+    voucherNo: '记-202406-002',
+    details: [
+      { id: 'D1', prodId: 'P2', prodName: '产品B', prodSpec: '型号B2', unit: '件', qty: 2, costPrice: 500, amount: 1000, warehouseId: '1', remark: '盘亏出库' }
+    ]
+  },
+  {
+    id: 'PI002',
+    docNo: 'PI-20240620-0002',
+    bizDate: '2024-06-20',
+    bizType: 1,
+    bizTypeName: '盘盈入库',
+    warehouseId: '3',
+    warehouseName: '成品仓库',
+    relatedStocktakeNo: null,
+    status: 0,
+    statusName: '草稿',
+    totalKinds: 0,
+    totalQty: 0,
+    totalAmount: 0,
+    writerId: '3',
+    writerName: '王五',
+    writeTime: '2024-06-20 16:00:00',
+    remark: '',
+    voucherNo: null,
+    details: []
+  }
+]
+
+// ==================== 产品单位管理 ====================
+
+export interface UnitGroup {
+  id: string
+  groupName: string
+  sortOrder: number
+  description: string
+  status: number
+  createTime: string
+  updateTime: string
+}
+
+export interface Unit {
+  id: string
+  unitCode: string
+  unitName: string
+  unitSymbol: string
+  unitType: number
+  unitTypeName: string
+  groupId: string | null
+  groupName: string
+  isBuiltIn: number
+  decimalPlaces: number
+  description: string
+  status: number
+  createTime: string
+  updateTime: string
+}
+
+export interface UnitConversion {
+  id: string
+  fromUnitId: string
+  fromUnitName: string
+  fromUnitSymbol: string
+  toUnitId: string
+  toUnitName: string
+  toUnitSymbol: string
+  conversionRate: number
+  description: string
+  status: number
+  createTime: string
+}
+
+export const mockUnitGroups: UnitGroup[] = [
+  { id: '1', groupName: '数量单位', sortOrder: 1, description: '用于计数的单位分组', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '2', groupName: '重量单位', sortOrder: 2, description: '重量计量分组', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '3', groupName: '长度单位', sortOrder: 3, description: '长度计量分组', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '4', groupName: '时间单位', sortOrder: 4, description: '时间计量分组', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '5', groupName: '面积单位', sortOrder: 5, description: '面积计量分组', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '6', groupName: '体积单位', sortOrder: 6, description: '体积计量分组', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '7', groupName: '货币单位', sortOrder: 7, description: '货币计量分组', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' }
+]
+
+export const mockUnits: Unit[] = [
+  { id: '1', unitCode: 'PCS', unitName: '件', unitSymbol: '件', unitType: 1, unitTypeName: '数量单位', groupId: '1', groupName: '数量单位', isBuiltIn: 1, decimalPlaces: 0, description: '系统内置数量单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '2', unitCode: 'PCS_BOX', unitName: '箱', unitSymbol: '箱', unitType: 1, unitTypeName: '数量单位', groupId: '1', groupName: '数量单位', isBuiltIn: 1, decimalPlaces: 0, description: '系统内置包装单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '3', unitCode: 'PCS_CARTON', unitName: '批', unitSymbol: '批', unitType: 1, unitTypeName: '数量单位', groupId: '1', groupName: '数量单位', isBuiltIn: 0, decimalPlaces: 0, description: '自定义批量单位', status: 0, createTime: '2024-01-10 10:00:00', updateTime: '2024-01-10 10:00:00' },
+  { id: '4', unitCode: 'KG', unitName: '千克', unitSymbol: 'kg', unitType: 6, unitTypeName: '重量单位', groupId: '2', groupName: '重量单位', isBuiltIn: 1, decimalPlaces: 2, description: '系统内置重量单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '5', unitCode: 'G', unitName: '克', unitSymbol: 'g', unitType: 6, unitTypeName: '重量单位', groupId: '2', groupName: '重量单位', isBuiltIn: 1, decimalPlaces: 2, description: '系统内置重量单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '6', unitCode: 'TON', unitName: '吨', unitSymbol: 't', unitType: 6, unitTypeName: '重量单位', groupId: '2', groupName: '重量单位', isBuiltIn: 0, decimalPlaces: 3, description: '自定义大重量单位', status: 0, createTime: '2024-01-15 14:00:00', updateTime: '2024-01-15 14:00:00' },
+  { id: '7', unitCode: 'M', unitName: '米', unitSymbol: 'm', unitType: 5, unitTypeName: '长度单位', groupId: '3', groupName: '长度单位', isBuiltIn: 1, decimalPlaces: 2, description: '系统内置长度单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '8', unitCode: 'CM', unitName: '厘米', unitSymbol: 'cm', unitType: 5, unitTypeName: '长度单位', groupId: '3', groupName: '长度单位', isBuiltIn: 1, decimalPlaces: 1, description: '系统内置长度单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '9', unitCode: 'DAY', unitName: '天', unitSymbol: '天', unitType: 3, unitTypeName: '时间单位', groupId: '4', groupName: '时间单位', isBuiltIn: 1, decimalPlaces: 0, description: '系统内置时间单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '10', unitCode: 'HOUR', unitName: '小时', unitSymbol: 'h', unitType: 3, unitTypeName: '时间单位', groupId: '4', groupName: '时间单位', isBuiltIn: 1, decimalPlaces: 2, description: '系统内置时间单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '11', unitCode: 'SQM', unitName: '平方米', unitSymbol: '㎡', unitType: 4, unitTypeName: '面积单位', groupId: '5', groupName: '面积单位', isBuiltIn: 1, decimalPlaces: 2, description: '系统内置面积单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '12', unitCode: 'L', unitName: '升', unitSymbol: 'L', unitType: 7, unitTypeName: '体积单位', groupId: '6', groupName: '体积单位', isBuiltIn: 1, decimalPlaces: 2, description: '系统内置体积单位', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '13', unitCode: 'CNY', unitName: '元', unitSymbol: '¥', unitType: 2, unitTypeName: '货币单位', groupId: '7', groupName: '货币单位', isBuiltIn: 1, decimalPlaces: 2, description: '人民币元', status: 0, createTime: '2024-01-01 09:00:00', updateTime: '2024-01-01 09:00:00' },
+  { id: '14', unitCode: 'USD', unitName: '美元', unitSymbol: '$', unitType: 2, unitTypeName: '货币单位', groupId: '7', groupName: '货币单位', isBuiltIn: 1, decimalPlaces: 2, description: '美元', status: 1, createTime: '2024-01-01 09:00:00', updateTime: '2024-06-01 10:00:00' },
+  { id: '15', unitCode: 'SET', unitName: '套', unitSymbol: '套', unitType: 1, unitTypeName: '数量单位', groupId: '1', groupName: '数量单位', isBuiltIn: 0, decimalPlaces: 0, description: '自定义套件单位', status: 0, createTime: '2024-02-01 11:00:00', updateTime: '2024-02-01 11:00:00' }
+]
+
+export const mockUnitConversions: UnitConversion[] = [
+  { id: '1', fromUnitId: '2', fromUnitName: '箱', fromUnitSymbol: '箱', toUnitId: '1', toUnitName: '件', toUnitSymbol: '件', conversionRate: 10, description: '1箱=10件', status: 0, createTime: '2024-01-05 10:00:00' },
+  { id: '2', fromUnitId: '6', fromUnitName: '吨', fromUnitSymbol: 't', toUnitId: '4', toUnitName: '千克', toUnitSymbol: 'kg', conversionRate: 1000, description: '1吨=1000千克', status: 0, createTime: '2024-01-15 14:30:00' },
+  { id: '3', fromUnitId: '4', fromUnitName: '千克', fromUnitSymbol: 'kg', toUnitId: '5', toUnitName: '克', toUnitSymbol: 'g', conversionRate: 1000, description: '1千克=1000克', status: 0, createTime: '2024-01-15 14:35:00' },
+  { id: '4', fromUnitId: '7', fromUnitName: '米', fromUnitSymbol: 'm', toUnitId: '8', toUnitName: '厘米', toUnitSymbol: 'cm', conversionRate: 100, description: '1米=100厘米', status: 0, createTime: '2024-01-20 09:00:00' },
+  { id: '5', fromUnitId: '15', fromUnitName: '套', fromUnitSymbol: '套', toUnitId: '1', toUnitName: '件', toUnitSymbol: '件', conversionRate: 5, description: '1套=5件', status: 0, createTime: '2024-02-01 11:05:00' }
 ]
